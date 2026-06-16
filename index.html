@@ -202,4 +202,186 @@
     <div class="note">“Bonus” = multi-goal + upset points. Tap any column header to sort.</div>
   </section>
 
-  
+  <section id="view-matches" class="hide">
+    <h2>Match Results</h2>
+    <div id="matchlist"></div>
+    <div class="note" id="matchnote"></div>
+  </section>
+</div>
+
+<div class="lightbox" id="lightbox"><span class="lbclose">&times;</span></div>
+
+<script src="data.js"></script>
+<script src="assignments.js" onerror="this.dataset.missing=1"></script>
+<script>
+const D = window.WC_DATA;
+const S = D.scoring;
+if(window.WC_ASSIGNMENTS){
+  D.players.forEach(p=>{ if(window.WC_ASSIGNMENTS[p.id]) p.teams = window.WC_ASSIGNMENTS[p.id]; });
+}
+const fmt = n => (n>0?'+':'') + n;
+function flagImg(code,cls){const t=D.teams[code];if(!t||!t.iso)return '';
+  return `<img class="flag-img ${cls||''}" src="https://flagcdn.com/w40/${t.iso}.png" alt="${code}" loading="lazy">`;}
+function openLightbox(p){
+  const lb=document.getElementById('lightbox');
+  const teamsTxt=(p.teams||[]).map(c=>D.teams[c]?`<span class="pill">${flagImg(c)} ${c}</span>`:'').join('');
+  lb.innerHTML=`<span class="lbclose">&times;</span><div class="lbcard">`+
+    `<img src="players/${p.photo}" alt="${p.name}">`+
+    `<div class="lbname">${p.name}</div><div class="chips">${teamsTxt}</div></div>`;
+  lb.classList.add('open');
+}
+
+function computeTeam(code){
+  const t=D.teams[code];
+  const s={played:0,wins:0,draws:0,losses:0,gf:0,ga:0,yellow:0,red:0,
+           resultPts:0,goalPts:0,multiBonus:0,cardPts:0,upsetBonus:0,upsets:0,total:0};
+  if(!t) return s;
+  (D.matches||[]).forEach(m=>{
+    if(m.status!=='FINISHED') return;
+    let mine,opp,oppCode,yc,rc;
+    if(m.home===code){mine=m.hs;opp=m.as;oppCode=m.away;yc=m.hy||0;rc=m.hr||0;}
+    else if(m.away===code){mine=m.as;opp=m.hs;oppCode=m.home;yc=m.ay||0;rc=m.ar||0;}
+    else return;
+    if(mine==null||opp==null) return;
+    s.played++; s.gf+=mine; s.ga+=opp; s.yellow+=yc; s.red+=rc;
+    let result=null;
+    if(mine>opp){s.wins++;result='win';}
+    else if(mine===opp){s.draws++;result='draw';}
+    else {s.losses++;}
+    s.goalPts += mine*S.goalFor;
+    if(mine>S.multiGoalOver) s.multiBonus += (mine-S.multiGoalOver)*S.multiGoalBonusPer;
+    const oppT=D.teams[oppCode];
+    if(oppT && result){
+      const gap=t.rank-oppT.rank;
+      if(gap>=S.upsetMinGap){
+        const tier=S.upsetTiers.find(x=>gap>=x.minGap);
+        if(tier){const b = result==='win'?tier.win:tier.draw; if(b){s.upsetBonus+=b;s.upsets++;}}
+      }
+    }
+  });
+  s.resultPts=s.wins*S.win+s.draws*S.draw;
+  s.cardPts=s.yellow*S.yellow+s.red*S.red;
+  s.bonus=s.multiBonus+s.upsetBonus;
+  s.total=s.resultPts+s.goalPts+s.multiBonus+s.cardPts+s.upsetBonus;
+  return s;
+}
+function ownerOf(code){const p=D.players.find(p=>(p.teams||[]).includes(code));return p?p.name:'—';}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+function playerTotal(p){return (p.teams||[]).reduce((a,c)=>a+computeTeam(c).total,0);}
+
+// stage label from today's date
+(function(){
+  const stages=[["2026-06-28","Group Stage"],["2026-07-04","Round of 32"],["2026-07-09","Round of 16"],
+    ["2026-07-14","Quarter-finals"],["2026-07-18","Semi-finals"],["2026-07-20","Final"]];
+  const today=new Date().toISOString().slice(0,10); let label="Final";
+  for(const [end,name] of stages){ if(today<end){label=name;break;} }
+  document.getElementById('stage').textContent=label;
+})();
+
+document.getElementById('updated').innerHTML='Last updated <b>'+D.updated+'</b>';
+document.getElementById('scorebar').innerHTML=
+  `<span class="chip pos">Win<b>${fmt(S.win)}</b></span>`+
+  `<span class="chip pos">Draw<b>${fmt(S.draw)}</b></span>`+
+  `<span class="chip pos">Goal<b>${fmt(S.goalFor)}</b></span>`+
+  `<span class="chip neg">Yellow<b>${fmt(S.yellow)}</b></span>`+
+  `<span class="chip neg">Red<b>${fmt(S.red)}</b></span>`;
+const tl=S.upsetTiers, hi=tl[0], mid=tl[1], lo=tl[2];
+document.getElementById('rulesnote').innerHTML=
+  `<div class="rulewrap">`+
+  `<div class="ruleitem"><span><b>Multi-goal bonus</b> — +${S.multiGoalBonusPer} for every goal past ${S.multiGoalOver} in a single match</span></div>`+
+  `<div class="ruleitem"><span><b>Upset bonus</b> (win&nbsp;/&nbsp;draw vs a higher-ranked team) — +${lo.win}/+${lo.draw} (gap ${lo.minGap}–${mid.minGap-1}), +${mid.win}/+${mid.draw} (gap ${mid.minGap}–${hi.minGap-1}), +${hi.win}/+${hi.draw} (gap ${hi.minGap}+)</span></div>`+
+  `</div>`;
+
+function buildLeaderboard(){
+  const lb=document.getElementById('lb'); lb.innerHTML='';
+  const ranked=[...D.players].map(p=>({p,total:playerTotal(p)})).sort((a,b)=>b.total-a.total);
+  ranked.forEach(({p,total},i)=>{
+    const row=document.createElement('div'); row.className='row r'+(i+1);
+    const pills=(p.teams||[]).map(c=>{const t=D.teams[c];return t?`<span class="pill">${flagImg(c)} ${c}</span>`:'';}).join('')
+      ||'<span class="pill">No teams yet</span>';
+    const av=p.photo
+      ?`<img class="avatar" src="players/${p.photo}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar',textContent:'${initials(p.name)}'}))">`
+      :`<div class="avatar">${initials(p.name)}</div>`;
+    row.innerHTML=`<div class="rank">${i+1}</div>${av}
+      <div class="pinfo"><div class="pname">${p.name}</div><div class="chips">${pills}</div></div>
+      <div class="pts"><b>${total}</b><span>PTS</span></div>`;
+    const avEl=row.querySelector('.avatar');
+    if(avEl && p.photo){avEl.style.cursor='zoom-in';
+      avEl.addEventListener('click',e=>{e.stopPropagation();openLightbox(p);});}
+    const det=document.createElement('div'); det.className='detail';
+    det.innerHTML=(p.teams||[]).map(c=>{
+      const t=D.teams[c]; if(!t) return ''; const s=computeTeam(c);
+      const bonusTxt=s.bonus?` · <span class="up">bonus ${fmt(s.bonus)}${s.upsets?' ⚡'+s.upsets:''}</span>`:'';
+      return `<div class="teamcard">${flagImg(c,'flag-lg')}
+        <span class="tname">${t.name}</span><span class="rk">#${t.rank}</span>
+        <span class="tstat">${s.played}P · ${s.wins}W ${s.draws}D ${s.losses}L · ${s.gf}⚽ · ${s.yellow}🟨 ${s.red}🟥${bonusTxt}</span>
+        <span class="tpts ${s.total>=0?'pos':'neg'}">${fmt(s.total)}</span></div>`;
+    }).join('')||'<div class="note">Teams assigned at the live draw.</div>';
+    row.onclick=()=>det.classList.toggle('open');
+    lb.appendChild(row); lb.appendChild(det);
+  });
+}
+
+let sortKey='total', sortDir=-1;
+function buildTeams(){
+  const tb=document.querySelector('#teamtable tbody'); tb.innerHTML='';
+  const rows=Object.entries(D.teams).map(([code,t])=>{
+    const s=computeTeam(code);
+    return {code,name:t.name,flag:t.flag,group:t.group,rank:t.rank,owner:ownerOf(code),...s};
+  });
+  rows.sort((a,b)=>{let av=a[sortKey],bv=b[sortKey];
+    if(typeof av==='string') return sortDir*av.localeCompare(bv);
+    return sortDir*(av-bv);});
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="l">${flagImg(r.code)} ${r.name}</td><td class="tag">#${r.rank}</td>
+      <td>${r.group}</td><td class="tag">${r.owner}</td><td>${r.played}</td><td>${r.wins}</td>
+      <td>${r.draws}</td><td>${r.losses}</td><td>${r.gf}</td><td>${r.yellow}</td><td>${r.red}</td>
+      <td class="${r.bonus>0?'up':'tag'}">${r.bonus?fmt(r.bonus):'–'}</td>
+      <td class="${r.total>=0?'pos':'neg'}"><b>${fmt(r.total)}</b></td>`;
+    tb.appendChild(tr);
+  });
+}
+document.querySelectorAll('#teamtable th').forEach(th=>{
+  th.onclick=()=>{const k=th.dataset.sort; if(!k)return;
+    if(sortKey===k)sortDir*=-1; else{sortKey=k;sortDir=(k==='name'||k==='group'||k==='owner'||k==='rank')?1:-1;}
+    buildTeams();};
+});
+
+function buildMatches(){
+  const ml=document.getElementById('matchlist'); ml.innerHTML='';
+  if(!D.matches||!D.matches.length){
+    document.getElementById('matchnote').textContent=
+      'No matches recorded yet. Results are added daily once the sweepstake is live.';
+    return;
+  }
+  D.matches.forEach(m=>{
+    const tH=D.teams[m.home],tA=D.teams[m.away];
+    const nameH=(tH?flagImg(m.home)+' '+tH.name:m.home), nameA=(tA?flagImg(m.away)+' '+tA.name:m.away);
+    const done=m.status==='FINISHED';
+    const score=(m.hs!=null&&m.as!=null)?`${m.hs} – ${m.as}`:'vs';
+    const cards=done?`<div class="gp">🟨 ${m.hy||0}/${m.ay||0} · 🟥 ${m.hr||0}/${m.ar||0}</div>`:'';
+    const el=document.createElement('div'); el.className='mt';
+    el.innerHTML=`<span class="side">${nameH}</span>
+      <span class="res ${done?'':'live'}">${score}${cards}</span>
+      <span class="side a">${nameA}<div class="gp">${m.date||''}</div></span>`;
+    ml.appendChild(el);
+  });
+}
+
+document.querySelectorAll('.btn[data-view]').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.btn[data-view]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    ['leaderboard','teams','matches'].forEach(v=>
+      document.getElementById('view-'+v).classList.toggle('hide',v!==b.dataset.view));
+  };
+});
+
+const _lb=document.getElementById('lightbox');
+_lb.addEventListener('click',()=>_lb.classList.remove('open'));
+
+buildLeaderboard(); buildTeams(); buildMatches();
+</script>
+</body>
+</html>
