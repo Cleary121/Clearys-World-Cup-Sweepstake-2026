@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>World Cup 2026 Sweepstake</title>
+<title>Cleary's World Cup Sweepstake</title>
 <style>
   :root{
     --hero1:#38003c; --hero2:#6a1270;
@@ -157,6 +157,12 @@
     .mt{padding:11px 13px;font-size:13px}
     .mt .res{min-width:64px;font-size:15px}
   }
+  .countdown{color:#bfe9ff;font-size:13px;font-weight:700;margin-top:5px}
+  .scopehint{text-align:center;color:var(--mut);font-size:11.5px;margin-top:8px}
+  .has-info{cursor:help}
+  .infopop{position:fixed;z-index:120;display:none;max-width:250px;background:#2a0030;color:#fff;
+    border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:9px 12px;font-size:12.5px;
+    line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.45);font-weight:600}
 </style>
 </head>
 <body>
@@ -164,8 +170,9 @@
   <header>
     <div class="stage" id="stage">Group Stage</div>
     <div class="kicker">Canada · Mexico · USA · 2026</div>
-    <h1>World Cup Sweepstake</h1>
+    <h1>Cleary's World Cup Sweepstake</h1>
     <div class="sub">12 players · 4 teams each · most points wins</div>
+    <div class="countdown" id="countdown"></div>
     <div class="updated" id="updated"></div>
   </header>
 
@@ -176,6 +183,7 @@
   </div>
 
   <div class="scorebar" id="scorebar"></div>
+  <div class="scopehint">ⓘ Tap any score or stat to see what it means</div>
   <div class="rulesnote" id="rulesnote"></div>
 
   <section id="view-leaderboard">
@@ -211,6 +219,7 @@
 
 <div class="lightbox" id="lightbox"><span class="lbclose">&times;</span></div>
 
+<div class="infopop" id="infopop"></div>
 <script src="data.js"></script>
 <script src="assignments.js" onerror="this.dataset.missing=1"></script>
 <script>
@@ -271,20 +280,31 @@ function playerTotal(p){return (p.teams||[]).reduce((a,c)=>a+computeTeam(c).tota
 
 // stage label from today's date
 (function(){
-  const stages=[["2026-06-28","Group Stage"],["2026-07-04","Round of 32"],["2026-07-09","Round of 16"],
-    ["2026-07-14","Quarter-finals"],["2026-07-18","Semi-finals"],["2026-07-20","Final"]];
-  const today=new Date().toISOString().slice(0,10); let label="Final";
-  for(const [end,name] of stages){ if(today<end){label=name;break;} }
-  document.getElementById('stage').textContent=label;
+  const STAGES=[
+    {name:"Group Stage",next:"Round of 32",end:"2026-06-27"},
+    {name:"Round of 32",next:"Round of 16",end:"2026-07-03"},
+    {name:"Round of 16",next:"Quarter-finals",end:"2026-07-07"},
+    {name:"Quarter-finals",next:"Semi-finals",end:"2026-07-11"},
+    {name:"Semi-finals",next:"Final",end:"2026-07-15"},
+    {name:"Final",next:null,end:"2026-07-19"}];
+  const SCHED={"2026-06-11":2,"2026-06-12":2,"2026-06-13":4,"2026-06-14":4,"2026-06-15":4,"2026-06-16":4,"2026-06-17":4,"2026-06-18":4,"2026-06-19":4,"2026-06-20":4,"2026-06-21":4,"2026-06-22":4,"2026-06-23":4,"2026-06-24":6,"2026-06-25":6,"2026-06-26":6,"2026-06-27":6,"2026-06-28":1,"2026-06-29":3,"2026-06-30":3,"2026-07-01":3,"2026-07-02":3,"2026-07-03":3,"2026-07-04":2,"2026-07-05":2,"2026-07-06":2,"2026-07-07":2,"2026-07-09":1,"2026-07-10":1,"2026-07-11":2,"2026-07-14":1,"2026-07-15":1,"2026-07-18":1,"2026-07-19":1};
+  const today=new Date().toISOString().slice(0,10);
+  const stEl=document.getElementById('stage'), cd=document.getElementById('countdown');
+  const st=STAGES.find(s=>today<=s.end);
+  if(!st){ stEl.textContent="Complete"; if(cd) cd.textContent="\ud83c\udfc6 Tournament complete"; return; }
+  stEl.textContent=st.name;
+  let left=0; for(const d in SCHED){ if(d>=today && d<=st.end) left+=SCHED[d]; }
+  if(cd){ const g=left+" game"+(left===1?"":"s");
+    cd.textContent = st.next ? g+" left until the "+st.next : g+" left in the tournament"; }
 })();
 
 document.getElementById('updated').innerHTML='Last updated <b>'+D.updated+'</b>';
 document.getElementById('scorebar').innerHTML=
-  `<span class="chip pos">Win<b>${fmt(S.win)}</b></span>`+
-  `<span class="chip pos">Draw<b>${fmt(S.draw)}</b></span>`+
-  `<span class="chip pos">Goal<b>${fmt(S.goalFor)}</b></span>`+
-  `<span class="chip neg">Yellow<b>${fmt(S.yellow)}</b></span>`+
-  `<span class="chip neg">Red<b>${fmt(S.red)}</b></span>`;
+  `<span class="chip pos has-info" data-info="3 points for each match this team wins">Win<b>${fmt(S.win)}</b></span>`+
+  `<span class="chip pos has-info" data-info="1 point for each match this team draws">Draw<b>${fmt(S.draw)}</b></span>`+
+  `<span class="chip pos has-info" data-info="1 point for every goal this team scores">Goal<b>${fmt(S.goalFor)}</b></span>`+
+  `<span class="chip neg has-info" data-info="${fmt(S.yellow)} point for each yellow card this team receives">Yellow<b>${fmt(S.yellow)}</b></span>`+
+  `<span class="chip neg has-info" data-info="${fmt(S.red)} points for each red card this team receives">Red<b>${fmt(S.red)}</b></span>`;
 const tl=S.upsetTiers, hi=tl[0], mid=tl[1], lo=tl[2];
 document.getElementById('rulesnote').innerHTML=
   `<div class="rulewrap">`+
@@ -314,8 +334,8 @@ function buildLeaderboard(){
       const bonusTxt=s.bonus?` · <span class="up">bonus ${fmt(s.bonus)}${s.upsets?' ⚡'+s.upsets:''}</span>`:'';
       return `<div class="teamcard">${flagImg(c,'flag-lg')}
         <span class="tname">${t.name}</span><span class="rk">#${t.rank}</span>
-        <span class="tstat">${s.played}P · ${s.wins}W ${s.draws}D ${s.losses}L · ${s.gf}⚽ · ${s.yellow}🟨 ${s.red}🟥${bonusTxt}</span>
-        <span class="tpts ${s.total>=0?'pos':'neg'}">${fmt(s.total)}</span></div>`;
+        <span class="tstat has-info" data-info="P = matches played · W/D/L = wins/draws/losses · ⚽ = goals scored · 🟨 yellow & 🟥 red cards. Bonus = multi-goal + upset points; ⚡ = number of upset results.">${s.played}P · ${s.wins}W ${s.draws}D ${s.losses}L · ${s.gf}⚽ · ${s.yellow}🟨 ${s.red}🟥${bonusTxt}</span>
+        <span class="tpts has-info ${s.total>=0?'pos':'neg'}" data-info="This team's total points so far: results + goals + bonuses, minus cards.">${fmt(s.total)}</span></div>`;
     }).join('')||'<div class="note">Teams assigned at the live draw.</div>';
     row.onclick=()=>det.classList.toggle('open');
     lb.appendChild(row); lb.appendChild(det);
@@ -380,6 +400,17 @@ document.querySelectorAll('.btn[data-view]').forEach(b=>{
 
 const _lb=document.getElementById('lightbox');
 _lb.addEventListener('click',()=>_lb.classList.remove('open'));
+
+const _ip=document.getElementById('infopop');
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-info]');
+  if(t){ e.stopPropagation(); _ip.textContent=t.getAttribute('data-info'); _ip.style.display='block';
+    const r=t.getBoundingClientRect(); const pw=_ip.offsetWidth, ph=_ip.offsetHeight;
+    let x=r.left+r.width/2-pw/2; x=Math.max(8,Math.min(x,window.innerWidth-pw-8));
+    let y=r.bottom+8; if(y+ph>window.innerHeight-8) y=r.top-ph-8;
+    _ip.style.left=x+'px'; _ip.style.top=y+'px';
+  } else { _ip.style.display='none'; }
+},true);
 
 buildLeaderboard(); buildTeams(); buildMatches();
 </script>
