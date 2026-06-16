@@ -399,8 +399,8 @@ function buildMatches(){
     const wrap=document.createElement('div'); wrap.className='matchwrap';
     const el=document.createElement('div'); el.className='mt';
     el.innerHTML=`<span class="side">${nameH}</span>
-      <span class="res ${done?'':'live'}">${score}${cards}</span>
-      <span class="side a">${nameA}<div class="gp">${m.date||''}</div></span>`;
+      <span class="res ${done?'':'live'}">${score}${cards}<div class="gp">${m.date||''}</div></span>
+      <span class="side a">${nameA}</span>`;
     wrap.appendChild(el);
     if(done){ const bz=matchBonuses(m); if(bz.length){ const bd=document.createElement('div'); bd.className='mbonus'; bd.innerHTML='⚡ '+bz.join('  ·  '); wrap.appendChild(bd); } }
     ml.appendChild(wrap);
