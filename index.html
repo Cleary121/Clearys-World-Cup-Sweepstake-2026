@@ -136,14 +136,14 @@
     .scorebar{gap:6px}
     .chip{padding:6px 10px;font-size:12px}
     h2{font-size:12px}
-    .row{padding:12px 13px;gap:11px;border-radius:14px}
-    .rank{width:20px;font-size:18px}
-    .avatar{width:42px;height:42px}
+    .row{padding:12px 11px;gap:9px;border-radius:14px}
+    .rank{width:16px;font-size:17px}
+    .avatar{width:40px;height:40px}
     .pname{font-size:16px}
-    .chips{gap:5px;margin-top:6px}
-    .pill{font-size:11px;padding:2px 7px;gap:4px}
-    .flag-img{width:18px;height:13px}
-    .pts b{font-size:24px}
+    .chips{gap:4px;margin-top:6px;flex-wrap:nowrap}
+    .pill{font-size:10.5px;padding:2px 5px;gap:3px;white-space:nowrap}
+    .flag-img{width:15px;height:11px}
+    .pts b{font-size:22px}
     .pts span{font-size:9.5px}
     .teamcard{flex-wrap:wrap}
     .teamcard .tstat{margin-left:0;text-align:left;flex-basis:100%;order:3;margin-top:5px}
@@ -163,6 +163,8 @@
   .infopop{position:fixed;z-index:120;display:none;max-width:250px;background:#2a0030;color:#fff;
     border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:9px 12px;font-size:12.5px;
     line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.45);font-weight:600}
+  .infopop .ipitem{display:flex;gap:7px;margin:3px 0;align-items:flex-start}
+  .infopop .ipitem::before{content:"•";color:#00ff87;font-weight:800;flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -334,7 +336,7 @@ function buildLeaderboard(){
       const bonusTxt=s.bonus?` · <span class="up">bonus ${fmt(s.bonus)}${s.upsets?' ⚡'+s.upsets:''}</span>`:'';
       return `<div class="teamcard">${flagImg(c,'flag-lg')}
         <span class="tname">${t.name}</span><span class="rk">#${t.rank}</span>
-        <span class="tstat has-info" data-info="P = matches played · W/D/L = wins/draws/losses · ⚽ = goals scored · 🟨 yellow & 🟥 red cards. Bonus = multi-goal + upset points; ⚡ = number of upset results.">${s.played}P · ${s.wins}W ${s.draws}D ${s.losses}L · ${s.gf}⚽ · ${s.yellow}🟨 ${s.red}🟥${bonusTxt}</span>
+        <span class="tstat has-info" data-info="P = matches played · W = wins · D = draws · L = losses · ⚽ = goals scored · 🟨 = yellow cards · 🟥 = red cards · Bonus = multi-goal + upset points · ⚡ = number of upset results">${s.played}P · ${s.wins}W ${s.draws}D ${s.losses}L · ${s.gf}⚽ · ${s.yellow}🟨 ${s.red}🟥${bonusTxt}</span>
         <span class="tpts has-info ${s.total>=0?'pos':'neg'}" data-info="This team's total points so far: results + goals + bonuses, minus cards.">${fmt(s.total)}</span></div>`;
     }).join('')||'<div class="note">Teams assigned at the live draw.</div>';
     row.onclick=()=>det.classList.toggle('open');
@@ -404,7 +406,8 @@ _lb.addEventListener('click',()=>_lb.classList.remove('open'));
 const _ip=document.getElementById('infopop');
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-info]');
-  if(t){ e.stopPropagation(); _ip.textContent=t.getAttribute('data-info'); _ip.style.display='block';
+  if(t){ e.stopPropagation(); const info=t.getAttribute('data-info'); const parts=info.split('·').map(x=>x.trim()).filter(Boolean);
+    _ip.innerHTML = parts.length>1 ? parts.map(x=>`<div class="ipitem">${x}</div>`).join('') : info; _ip.style.display='block';
     const r=t.getBoundingClientRect(); const pw=_ip.offsetWidth, ph=_ip.offsetHeight;
     let x=r.left+r.width/2-pw/2; x=Math.max(8,Math.min(x,window.innerWidth-pw-8));
     let y=r.bottom+8; if(y+ph>window.innerHeight-8) y=r.top-ph-8;
