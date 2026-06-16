@@ -415,6 +415,17 @@ document.addEventListener('click',e=>{
   } else { _ip.style.display='none'; }
 },true);
 
+// fit the title to fill the header width on one line (any device)
+function fitTitle(){
+  const h1=document.querySelector('header h1'); if(!h1) return;
+  h1.style.whiteSpace='nowrap'; h1.style.fontSize='20px';
+  const avail=h1.clientWidth, w=h1.scrollWidth;
+  if(w>0){ let sz=20*avail/w*0.96; sz=Math.min(Math.max(sz,16),48); h1.style.fontSize=sz+'px'; }
+}
+window.addEventListener('resize',fitTitle);
+window.addEventListener('load',fitTitle);
+fitTitle();
+
 buildLeaderboard(); buildTeams(); buildMatches();
 </script>
 </body>
