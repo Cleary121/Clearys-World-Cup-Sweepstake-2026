@@ -1,0 +1,7 @@
+Drop each player's photo in THIS folder.
+
+- Use the exact filenames listed in update_scores.py (player1.jpg, player2.jpg, ...)
+  OR rename them and update the "photo" field for each player in update_scores.py.
+- Square images look best (they're shown as circles). ~400x400px is plenty.
+- .jpg, .png, or .webp all work.
+- No photo yet? The dashboard and draw automatically show the player's initials instead.
