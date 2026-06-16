@@ -106,6 +106,7 @@
     background:var(--card);border:1px solid var(--line);border-radius:12px;font-size:14px}
   .matchwrap{margin-bottom:8px}
   .mbonus{font-size:11.5px;color:var(--cyan);font-weight:700;text-align:center;padding:5px 12px 0;line-height:1.4}
+  .mrk{color:var(--cyan);font-size:11px;font-weight:700;margin-left:3px}
   .mt .side{flex:1;font-weight:600}.mt .side.a{text-align:right}
   .mt .res{font-weight:900;font-size:16px;min-width:76px;text-align:center}
   .mt .gp{color:var(--mut);font-size:11.5px;margin-top:2px;font-weight:600}
@@ -391,7 +392,7 @@ function buildMatches(){
   }
   D.matches.forEach(m=>{
     const tH=D.teams[m.home],tA=D.teams[m.away];
-    const nameH=(tH?flagImg(m.home)+' '+tH.name:m.home), nameA=(tA?flagImg(m.away)+' '+tA.name:m.away);
+    const nameH=(tH?flagImg(m.home)+' '+tH.name+` <span class="mrk">#${tH.rank}</span>`:m.home), nameA=(tA?flagImg(m.away)+' '+tA.name+` <span class="mrk">#${tA.rank}</span>`:m.away);
     const done=m.status==='FINISHED';
     const score=(m.hs!=null&&m.as!=null)?`${m.hs} – ${m.as}`:'vs';
     const cards=done?`<div class="gp">🟨 ${m.hy||0}/${m.ay||0} · 🟥 ${m.hr||0}/${m.ar||0}</div>`:'';
