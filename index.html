@@ -224,8 +224,8 @@
 <div class="lightbox" id="lightbox"><span class="lbclose">&times;</span></div>
 
 <div class="infopop" id="infopop"></div>
-<script src="data.js"></script>
-<script src="assignments.js" onerror="this.dataset.missing=1"></script>
+<script>document.write('<scr'+'ipt src="data.js?t='+Date.now()+'"><\/scr'+'ipt>');</script>
+<script>document.write('<scr'+'ipt src="assignments.js?t='+Date.now()+'" onerror="this.dataset.missing=1"><\/scr'+'ipt>');</script>
 <script>
 const D = window.WC_DATA;
 const S = D.scoring;
