@@ -35,8 +35,8 @@
   .updated b{color:#04f5ff}
 
   .nav{display:flex;gap:8px;justify-content:center;margin:18px 0 4px;flex-wrap:wrap}
-  .btn{background:var(--card);border:1px solid var(--line);color:var(--txt);
-    padding:10px 18px;border-radius:999px;font-weight:700;cursor:pointer;font-size:14px;transition:.15s}
+  .btn{background:var(--card);border:1px solid var(--line);color:var(--txt);flex:1 1 0;text-align:center;
+    padding:11px 14px;border-radius:999px;font-weight:700;cursor:pointer;font-size:14px;transition:.15s}
   .btn:hover{border-color:#cbbcd6}
   .btn.active{background:var(--green);color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(6,194,112,.32)}
   .btn.gold{background:linear-gradient(90deg,var(--green),var(--cyan));color:#fff;border:none;font-weight:800}
@@ -135,8 +135,9 @@
     header h1{font-size:clamp(15px,4.9vw,30px);margin-top:6px;white-space:nowrap;letter-spacing:-.6px}
     .sub{font-size:13.5px}
     .updated{font-size:12px}
-    .nav{gap:4px;margin-top:14px}
-    .btn{padding:6px 9px;font-size:11.5px}
+    .nav{gap:6px;margin-top:14px}
+    .btn{padding:9px 4px;font-size:12.5px}
+    .btn .ic{display:none}
     .scorebar{gap:6px}
     .chip{padding:6px 10px;font-size:12px}
     h2{font-size:12px}
@@ -190,19 +191,15 @@
   </header>
 
   <div class="nav">
-    <button class="btn active" data-view="leaderboard">🏆 Leaderboard</button>
-    <button class="btn" data-view="teams">🌍 Teams</button>
-    <button class="btn" data-view="matches">📅 Results</button>
-    <button class="btn" data-view="prizes">💶 Prizes</button>
+    <button class="btn active" data-view="leaderboard"><span class="ic">🏆</span> Leaderboard</button>
+    <button class="btn" data-view="teams"><span class="ic">🌍</span> Teams</button>
+    <button class="btn" data-view="matches"><span class="ic">📅</span> Results</button>
+    <button class="btn" data-view="prizes"><span class="ic">💶</span> Prizes</button>
   </div>
 
   <section id="view-prizes" class="hide">
     <h2>The Pot</h2>
     <div id="potbox"></div>
-    <h2>How points work</h2>
-    <div class="scorebar" id="scorebar"></div>
-    <div class="scopehint">ⓘ Tap any score or stat to see what it means</div>
-    <div class="rulesnote" id="rulesnote"></div>
   </section>
 
   <section id="view-leaderboard">
