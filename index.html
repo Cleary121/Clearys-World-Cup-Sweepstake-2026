@@ -26,7 +26,8 @@
   header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;
     background:linear-gradient(90deg,var(--greenb),#04f5ff,var(--magenta))}
   .kicker{letter-spacing:.3em;color:var(--greenb);font-size:12px;font-weight:800;text-transform:uppercase}
-  header h1{margin:8px 0 6px;font-size:clamp(28px,6vw,44px);font-weight:900;letter-spacing:-.5px;line-height:1.02;color:#fff}
+  header h1{margin:8px 0 6px;font-size:clamp(28px,6vw,44px);font-weight:900;letter-spacing:1px;line-height:1.02;color:#fff;text-transform:uppercase}
+  .cstatus{color:#cfe9ff;font-size:15px;font-weight:700;margin-top:8px}
   .sub{color:#d9c7df;font-size:15px}
   .stage{position:absolute;top:24px;right:24px;background:var(--greenb);color:#06231a;
     font-weight:800;font-size:13px;padding:8px 16px;border-radius:999px;letter-spacing:.04em}
@@ -173,11 +174,9 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="stage" id="stage">Group Stage</div>
-    <div class="kicker">Canada · Mexico · USA · 2026</div>
-    <h1>Cleary's World Cup Sweepstake</h1>
-    <div class="sub">12 players · 4 teams each · most points wins</div>
-    <div class="countdown" id="countdown"></div>
+    <div class="kicker">Cleary's Sweepstake</div>
+    <h1>World Cup 2026</h1>
+    <div class="cstatus" id="cstatus"></div>
     <div class="updated" id="updated"></div>
   </header>
 
@@ -294,13 +293,12 @@ function playerTotal(p){return (p.teams||[]).reduce((a,c)=>a+computeTeam(c).tota
     {name:"Final",next:null,end:"2026-07-19"}];
   const SCHED={"2026-06-11":2,"2026-06-12":2,"2026-06-13":4,"2026-06-14":4,"2026-06-15":4,"2026-06-16":4,"2026-06-17":4,"2026-06-18":4,"2026-06-19":4,"2026-06-20":4,"2026-06-21":4,"2026-06-22":4,"2026-06-23":4,"2026-06-24":6,"2026-06-25":6,"2026-06-26":6,"2026-06-27":6,"2026-06-28":1,"2026-06-29":3,"2026-06-30":3,"2026-07-01":3,"2026-07-02":3,"2026-07-03":3,"2026-07-04":2,"2026-07-05":2,"2026-07-06":2,"2026-07-07":2,"2026-07-09":1,"2026-07-10":1,"2026-07-11":2,"2026-07-14":1,"2026-07-15":1,"2026-07-18":1,"2026-07-19":1};
   const today=new Date().toISOString().slice(0,10);
-  const stEl=document.getElementById('stage'), cd=document.getElementById('countdown');
+  const cs=document.getElementById('cstatus');
   const st=STAGES.find(s=>today<=s.end);
-  if(!st){ stEl.textContent="Complete"; if(cd) cd.textContent="\ud83c\udfc6 Tournament complete"; return; }
-  stEl.textContent=st.name;
+  if(!st){ if(cs) cs.textContent="Tournament complete"; return; }
   let left=0; for(const d in SCHED){ if(d>=today && d<=st.end) left+=SCHED[d]; }
-  if(cd){ const g=left+" game"+(left===1?"":"s");
-    cd.textContent = st.next ? g+" left until the "+st.next : g+" left in the tournament"; }
+  if(cs){ const g=left+" game"+(left===1?"":"s");
+    cs.textContent = st.next ? st.name+"  ·  "+g+" to the "+st.next : st.name+"  ·  "+g+" left"; }
 })();
 
 document.getElementById('updated').innerHTML='Last updated <b>'+D.updated+'</b>';
