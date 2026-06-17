@@ -768,5 +768,6 @@ window.WC_DATA = {
     "p12",
     "p5",
     "p3"
-  ]
+  ],
+  "resultsUpdated": "2026-06-17 10:16"
 };

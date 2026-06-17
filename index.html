@@ -332,7 +332,7 @@ function movement(id,cur){ const prev=(D.prevOrder||[]).indexOf(id); if(prev<0) 
     cs.textContent = st.next ? st.name+"  ·  "+g+" to the "+st.next : st.name+"  ·  "+g+" left"; }
 })();
 
-document.getElementById('updated').innerHTML='Last updated <b>'+D.updated+'</b>';
+document.getElementById('updated').innerHTML='Last result update <b>'+(D.resultsUpdated||D.updated)+'</b>';
 const SB_HTML=
   `<span class="chip pos has-info" data-info="3 points for each match this team wins">Win<b>${fmt(S.win)}</b></span>`+
   `<span class="chip pos has-info" data-info="1 point for each match this team draws">Draw<b>${fmt(S.draw)}</b></span>`+
