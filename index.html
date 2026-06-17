@@ -209,6 +209,10 @@
     <h2>Standings</h2>
     <div class="lb" id="lb"></div>
     <div class="note">Tap a player to see their teams and point breakdown.</div>
+    <h2>How points work</h2>
+    <div class="scorebar"></div>
+    <div class="scopehint">ⓘ Tap any score or stat to see what it means</div>
+    <div class="rulesnote"></div>
   </section>
 
   <section id="view-teams" class="hide">
@@ -318,18 +322,20 @@ function movement(id,cur){ const prev=(D.prevOrder||[]).indexOf(id); if(prev<0) 
 })();
 
 document.getElementById('updated').innerHTML='Last updated <b>'+D.updated+'</b>';
-document.getElementById('scorebar').innerHTML=
+const SB_HTML=
   `<span class="chip pos has-info" data-info="3 points for each match this team wins">Win<b>${fmt(S.win)}</b></span>`+
   `<span class="chip pos has-info" data-info="1 point for each match this team draws">Draw<b>${fmt(S.draw)}</b></span>`+
   `<span class="chip pos has-info" data-info="1 point for every goal this team scores">Goal<b>${fmt(S.goalFor)}</b></span>`+
   `<span class="chip neg has-info" data-info="${fmt(S.yellow)} point for each yellow card this team receives">Yellow<b>${fmt(S.yellow)}</b></span>`+
   `<span class="chip neg has-info" data-info="${fmt(S.red)} points for each red card this team receives">Red<b>${fmt(S.red)}</b></span>`;
+document.querySelectorAll('.scorebar').forEach(el=>el.innerHTML=SB_HTML);
 const tl=S.upsetTiers, hi=tl[0], mid=tl[1], lo=tl[2];
-document.getElementById('rulesnote').innerHTML=
+const RN_HTML=
   `<div class="rulewrap">`+
   `<div class="ruleitem"><span><b>Multi-goal bonus</b> — +${S.multiGoalBonusPer} for every goal past ${S.multiGoalOver} in a single match</span></div>`+
   `<div class="ruleitem"><span><b>Upset bonus</b> (win&nbsp;/&nbsp;draw vs a higher-ranked team) — +${lo.win}/+${lo.draw} (gap ${lo.minGap}–${mid.minGap-1}), +${mid.win}/+${mid.draw} (gap ${mid.minGap}–${hi.minGap-1}), +${hi.win}/+${hi.draw} (gap ${hi.minGap}+)</span></div>`+
   `</div>`;
+document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
 (function(){
   const fee=D.entryFee||0, paid=D.players.filter(p=>p.paid), pot=paid.length*fee;
   const pb=document.getElementById('potbox'); if(!pb) return;
