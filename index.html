@@ -184,15 +184,23 @@
   #rules{margin-top:30px}
   .jumpbtn{background:var(--pill);border:1px solid var(--pillb);color:var(--pilltxt);font-weight:700;font-size:12.5px;padding:7px 16px;border-radius:999px;cursor:pointer}
   .jumpbtn:hover{border-color:#cbbcd6}
+  header.banner{position:relative;padding:0;border-radius:0;overflow:visible;background:none;text-align:center}
+  header.banner::after{display:none}
+  .bannerimg{display:block;width:100%;height:auto;border-radius:14px}
+  .bannerover{position:absolute;left:0;right:0;bottom:0;height:40%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5%}
+  .bannerover .cstatus{margin:0;background:rgba(4,245,255,.12);border:1px solid rgba(4,245,255,.55);color:#e6fbff;font-weight:800;border-radius:999px;padding:clamp(4px,0.9vw,9px) clamp(12px,3.2vw,26px);font-size:clamp(11px,2.5vw,19px)}
+  .bannerover .updated{margin:0;color:#bfe9ff;font-size:clamp(9px,1.7vw,13px)}
+  .bannerover .updated b{color:#7fe7ff}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div class="kicker">Cleary's Sweepstake</div>
-    <h1>World Cup 2026</h1>
-    <div class="cstatus" id="cstatus"></div>
-    <div class="updated" id="updated"></div>
+  <header class="banner">
+    <img class="bannerimg" src="banner.png?v=1" alt="Cleary's Sweepstake — World Cup 2026">
+    <div class="bannerover">
+      <div class="cstatus" id="cstatus"></div>
+      <div class="updated" id="updated"></div>
+    </div>
   </header>
 
   <div class="nav">
