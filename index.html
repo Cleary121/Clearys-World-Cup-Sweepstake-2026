@@ -179,6 +179,9 @@
   .potval{font-size:46px;font-weight:900;color:var(--green);line-height:1}
   .potlbl{color:var(--txt);font-weight:800;margin-top:8px;text-transform:uppercase;letter-spacing:.08em;font-size:13px}
   .potmeta{color:var(--mut);font-size:13px;margin-top:10px;line-height:1.5}
+  .jumprow{text-align:center;margin:-4px 0 14px}
+  .jumpbtn{background:var(--pill);border:1px solid var(--pillb);color:var(--pilltxt);font-weight:700;font-size:12.5px;padding:7px 16px;border-radius:999px;cursor:pointer}
+  .jumpbtn:hover{border-color:#cbbcd6}
 </style>
 </head>
 <body>
@@ -204,9 +207,10 @@
 
   <section id="view-leaderboard">
     <h2>Standings</h2>
+    <div class="jumprow"><button class="jumpbtn" onclick="document.getElementById('rules').scrollIntoView({behavior:'smooth'})">ⓘ How points work</button></div>
     <div class="lb" id="lb"></div>
     <div class="note">Tap a player to see their teams and point breakdown.</div>
-    <h2>How points work</h2>
+    <h2 id="rules">How points work</h2>
     <div class="scorebar"></div>
     <div class="scopehint">ⓘ Tap any score or stat to see what it means</div>
     <div class="rulesnote"></div>
