@@ -529,5 +529,6 @@ window.WC_DATA = {
     "p12"
   ],
   "resultsUpdated": "",
-  "favourite": "FRA"
+  "favourite": "FRA",
+  "wcTable": {"MEX":{"pts":3,"gd":2},"KOR":{"pts":3,"gd":1},"CZE":{"pts":0,"gd":-1},"RSA":{"pts":0,"gd":-2},"SUI":{"pts":1,"gd":0},"CAN":{"pts":1,"gd":0},"QAT":{"pts":1,"gd":0},"BIH":{"pts":1,"gd":0},"SCO":{"pts":3,"gd":1},"MAR":{"pts":1,"gd":0},"BRA":{"pts":1,"gd":0},"HAI":{"pts":0,"gd":-1},"USA":{"pts":3,"gd":3},"AUS":{"pts":3,"gd":2},"TUR":{"pts":0,"gd":-2},"PAR":{"pts":0,"gd":-3},"GER":{"pts":3,"gd":6},"CIV":{"pts":3,"gd":1},"ECU":{"pts":0,"gd":-1},"CUW":{"pts":0,"gd":-6},"SWE":{"pts":3,"gd":4},"JPN":{"pts":1,"gd":0},"NED":{"pts":1,"gd":0},"TUN":{"pts":0,"gd":-4},"NZL":{"pts":1,"gd":0},"IRN":{"pts":1,"gd":0},"BEL":{"pts":1,"gd":0},"EGY":{"pts":1,"gd":0},"URU":{"pts":1,"gd":0},"KSA":{"pts":1,"gd":0},"ESP":{"pts":1,"gd":0},"CPV":{"pts":1,"gd":0},"NOR":{"pts":3,"gd":3},"FRA":{"pts":3,"gd":2},"SEN":{"pts":0,"gd":-2},"IRQ":{"pts":0,"gd":-3},"ARG":{"pts":3,"gd":3},"AUT":{"pts":3,"gd":2},"JOR":{"pts":0,"gd":-2},"ALG":{"pts":0,"gd":-3},"COL":{"pts":3,"gd":2},"COD":{"pts":1,"gd":0},"POR":{"pts":1,"gd":0},"UZB":{"pts":0,"gd":-2},"ENG":{"pts":3,"gd":2},"GHA":{"pts":3,"gd":1},"PAN":{"pts":0,"gd":-1},"CRO":{"pts":0,"gd":-2}}
 };

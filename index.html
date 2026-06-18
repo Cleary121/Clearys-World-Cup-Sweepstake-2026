@@ -364,12 +364,11 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
   const pb=document.getElementById('potbox'); if(!pb) return;
   const fee=D.entryFee||0, paid=D.players.filter(p=>p.paid), apppot=paid.length*fee;
   const unpaid=D.players.filter(p=>!p.paid).map(p=>p.name);
-  // Wooden spoon (MAIN pot) uses REAL football points (3 win / 1 draw) + actual GD, NOT the sweepstake scoring
-  const realPts=p=>(p.teams||[]).reduce((a,c)=>{const t=computeTeam(c);return a+3*t.wins+t.draws;},0);
-  const gd=p=>(p.teams||[]).reduce((a,c)=>{const t=computeTeam(c);return a+(t.gf-t.ga);},0);
-  const fin=(D.matches||[]).some(m=>m.status==='FINISHED');
+  // Wooden spoon (MAIN pot): WHOLE-tournament real football pts (3 win/1 draw) + actual GD, from D.wcTable — kept separate from the sweepstake leaderboard
+  const WT=D.wcTable||{};
+  const mp=p=>(p.teams||[]).reduce((a,c)=>{const t=WT[c]||{};return {pts:a.pts+(t.pts||0),gd:a.gd+(t.gd||0)};},{pts:0,gd:0});
   let worst="to be decided once results are in";
-  if(fin){ const r=[...D.players].map(p=>({p,pts:realPts(p),g:gd(p)})).sort((a,b)=>a.pts-b.pts||a.g-b.g)[0];
+  if(Object.keys(WT).length){ const r=[...D.players].map(p=>{const m=mp(p);return {p,pts:m.pts,g:m.gd};}).sort((a,b)=>a.pts-b.pts||a.g-b.g)[0];
     worst=`${r.p.name} · ${r.pts} pts · GD ${r.g>=0?'+':''}${r.g}`; }
   const fav=D.favourite, ft=fav?D.teams[fav]:null;
   const favHTML = ft ? `<div class="favbox"><span class="favlab">🎲 Bookies' favourite to win the Cup</span><span class="favteam">${flagImg(fav)} <b>${ft.name}</b> <span class="favrk">#${ft.rank}</span> · ${ownerOf(fav)}</span></div>` : '';
