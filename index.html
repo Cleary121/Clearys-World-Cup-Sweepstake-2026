@@ -197,6 +197,7 @@
   .prizerow{display:flex;gap:12px;align-items:baseline;background:#faf8fc;border:1px solid var(--line);border-radius:10px;padding:9px 13px}
   .prizerow .pz{font-weight:900;color:var(--green);white-space:nowrap;min-width:74px}
   .prizerow .pzl{color:var(--txt);font-size:13px;line-height:1.4}
+  .prizerow .curr{display:inline-block;margin-top:4px;color:var(--magenta);font-weight:800;font-size:12px}
 </style>
 </head>
 <body>
@@ -357,6 +358,11 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
   const pb=document.getElementById('potbox'); if(!pb) return;
   const fee=D.entryFee||0, paid=D.players.filter(p=>p.paid), apppot=paid.length*fee;
   const unpaid=D.players.filter(p=>!p.paid).map(p=>p.name);
+  const gd=p=>(p.teams||[]).reduce((a,c)=>{const t=computeTeam(c);return a+(t.gf-t.ga);},0);
+  const fin=(D.matches||[]).some(m=>m.status==='FINISHED');
+  let worst="Decided once results are in";
+  if(fin){ const r=[...D.players].map(p=>({p,pts:playerTotal(p),g:gd(p)})).sort((a,b)=>a.pts-b.pts||a.g-b.g)[0];
+    worst=`${r.p.name} · ${r.pts} pts · GD ${r.g>=0?'+':''}${r.g}`; }
   pb.innerHTML=
    `<div class="potcard">`+
      `<div class="pottag">Main pot · all 12 in</div>`+
@@ -364,7 +370,7 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
      `<div class="prizelist">`+
        `<div class="prizerow"><span class="pz">🏆 €500</span><span class="pzl">World Cup winner — whoever owns the team that lifts the trophy</span></div>`+
        `<div class="prizerow"><span class="pz">🥈 €50</span><span class="pzl">Runner-up — owner of the beaten finalists</span></div>`+
-       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — worst by points, then goal difference</span></div>`+
+       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — worst by points, then goal difference<br><span class="curr">Currently last: ${worst}</span></span></div>`+
      `</div>`+
    `</div>`+
    `<div class="potcard">`+
