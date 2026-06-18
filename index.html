@@ -198,6 +198,8 @@
   .prizerow .pz{font-weight:900;color:var(--green);white-space:nowrap;min-width:74px}
   .prizerow .pzl{color:var(--txt);font-size:13px;line-height:1.4}
   .prizerow .curr{display:inline-block;margin-top:4px;color:var(--magenta);font-weight:800;font-size:12px}
+  .favbox{margin:14px auto 0;max-width:540px;background:rgba(4,245,255,.10);border:1px solid rgba(4,245,255,.4);border-radius:10px;padding:10px 13px;color:var(--txt);font-size:13px;font-weight:600}
+  .favbox .favrk{color:var(--cyan);font-weight:800}
 </style>
 </head>
 <body>
@@ -363,6 +365,8 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
   let worst="Decided once results are in";
   if(fin){ const r=[...D.players].map(p=>({p,pts:playerTotal(p),g:gd(p)})).sort((a,b)=>a.pts-b.pts||a.g-b.g)[0];
     worst=`${r.p.name} · ${r.pts} pts · GD ${r.g>=0?'+':''}${r.g}`; }
+  const fav=D.favourite, ft=fav?D.teams[fav]:null;
+  const favHTML = ft ? `<div class="favbox">🎲 Bookies' favourite to win the Cup: <b>${flagImg(fav)} ${ft.name}</b> <span class="favrk">#${ft.rank}</span> · ${ownerOf(fav)}'s team</div>` : '';
   pb.innerHTML=
    `<div class="potcard">`+
      `<div class="pottag">Main pot · all 12 in</div>`+
@@ -372,6 +376,7 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
        `<div class="prizerow"><span class="pz">🥈 €50</span><span class="pzl">Runner-up — owner of the beaten finalists</span></div>`+
        `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — worst by points, then goal difference<br><span class="curr">Currently last: ${worst}</span></span></div>`+
      `</div>`+
+     favHTML+
    `</div>`+
    `<div class="potcard">`+
      `<div class="pottag">App game pot · this leaderboard</div>`+

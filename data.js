@@ -528,5 +528,6 @@ window.WC_DATA = {
     "p11",
     "p12"
   ],
-  "resultsUpdated": ""
+  "resultsUpdated": "",
+  "favourite": "FRA"
 };
