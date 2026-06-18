@@ -197,7 +197,7 @@
   .prizerow{display:flex;gap:12px;align-items:baseline;background:#faf8fc;border:1px solid var(--line);border-radius:10px;padding:9px 13px}
   .prizerow .pz{font-weight:900;color:var(--green);white-space:nowrap;min-width:74px}
   .prizerow .pzl{color:var(--txt);font-size:13px;line-height:1.4}
-  .prizerow .curr{display:block;margin-top:5px;color:var(--magenta);font-weight:800;font-size:12.5px}
+  .prizerow .curr{display:block;margin-top:5px;color:var(--magenta);font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .favbox{margin:14px auto 0;max-width:540px;background:rgba(4,245,255,.10);border:1px solid rgba(4,245,255,.4);border-radius:10px;padding:12px 14px;color:var(--txt);text-align:center}
   .favbox .favlab{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)}
   .favbox .favteam{display:block;margin-top:5px;font-size:15px;font-weight:700;line-height:1.45}
@@ -371,7 +371,7 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
   const wcodes=Object.keys(WT);
   if(wcodes.length){ const w=wcodes.map(c=>({c,pts:WT[c].pts,gd:WT[c].gd})).sort((a,b)=>a.pts-b.pts||a.gd-b.gd)[0];
     const tn=D.teams[w.c]?D.teams[w.c].name:w.c;
-    worst=`${ownerOf(w.c)} · ${flagImg(w.c)} ${tn} · ${w.pts} pts · GD ${w.gd>=0?'+':''}${w.gd}`; }
+    worst=`${flagImg(w.c)} ${tn} · ${ownerOf(w.c)} · ${w.pts}p ${w.gd>=0?'+':''}${w.gd}`; }
   const fav=D.favourite, ft=fav?D.teams[fav]:null;
   const favHTML = ft ? `<div class="favbox"><span class="favlab">🎲 Bookies' favourite to win the Cup</span><span class="favteam">${flagImg(fav)} <b>${ft.name}</b> <span class="favrk">#${ft.rank}</span> · ${ownerOf(fav)}</span></div>` : '';
   pb.innerHTML=
@@ -381,7 +381,7 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
      `<div class="prizelist">`+
        `<div class="prizerow"><span class="pz">🏆 €500</span><span class="pzl">World Cup winner — whoever owns the team that lifts the trophy</span></div>`+
        `<div class="prizerow"><span class="pz">🥈 €50</span><span class="pzl">Runner-up — owner of the beaten finalists</span></div>`+
-       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — owner of the single worst team (by points, then goal difference)<br><span class="curr">Worst team now: ${worst}</span></span></div>`+
+       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — owner of the single worst team (by points, then goal difference)<br><span class="curr">Worst: ${worst}</span></span></div>`+
      `</div>`+
      favHTML+
    `</div>`+
