@@ -191,6 +191,12 @@
   .bannerover .cstatus{margin:0;background:rgba(4,245,255,.12);border:1px solid rgba(4,245,255,.55);color:#e6fbff;font-weight:800;border-radius:999px;padding:clamp(4px,0.9vw,9px) clamp(12px,3.2vw,26px);font-size:clamp(11px,2.5vw,19px)}
   .bannerover .updated{margin:0;color:#bfe9ff;font-size:clamp(9px,1.7vw,13px)}
   .bannerover .updated b{color:#7fe7ff}
+  .pottag{color:var(--mut);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+  .potcard + .potcard{margin-top:14px}
+  .prizelist{margin:14px auto 0;display:flex;flex-direction:column;gap:9px;text-align:left;max-width:540px}
+  .prizerow{display:flex;gap:12px;align-items:baseline;background:#faf8fc;border:1px solid var(--line);border-radius:10px;padding:9px 13px}
+  .prizerow .pz{font-weight:900;color:var(--green);white-space:nowrap;min-width:74px}
+  .prizerow .pzl{color:var(--txt);font-size:13px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -211,7 +217,7 @@
   </div>
 
   <section id="view-prizes" class="hide">
-    <h2>The Pot</h2>
+    <h2>Prizes</h2>
     <div id="potbox"></div>
   </section>
 
@@ -332,7 +338,7 @@ function movement(id,cur){ const prev=(D.prevOrder||[]).indexOf(id); if(prev<0) 
     cs.textContent = st.next ? st.name+"  ·  "+g+" to the "+st.next : st.name+"  ·  "+g+" left"; }
 })();
 
-document.getElementById('updated').innerHTML='Last result update <b>'+(D.resultsUpdated||D.updated)+'</b>';
+document.getElementById('updated').innerHTML=((D.matches||[]).some(m=>m.status==='FINISHED'))?('Last result update <b>'+(D.resultsUpdated||D.updated)+'</b>'):'Awaiting first results · group game 2 onward';
 const SB_HTML=
   `<span class="chip pos has-info" data-info="3 points for each match this team wins">Win<b>${fmt(S.win)}</b></span>`+
   `<span class="chip pos has-info" data-info="1 point for each match this team draws">Draw<b>${fmt(S.draw)}</b></span>`+
@@ -348,11 +354,25 @@ const RN_HTML=
   `</div>`;
 document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
 (function(){
-  const fee=D.entryFee||0, paid=D.players.filter(p=>p.paid), pot=paid.length*fee;
   const pb=document.getElementById('potbox'); if(!pb) return;
-  pb.innerHTML=`<div class="potcard"><div class="potval">€${pot}</div>`+
-    `<div class="potlbl">in the pot · winner takes all</div>`+
-    `<div class="potmeta">${paid.length} paid in @ €${fee} each${paid.length?' · '+paid.map(p=>p.name).join(', '):''}</div></div>`;
+  const fee=D.entryFee||0, paid=D.players.filter(p=>p.paid), apppot=paid.length*fee;
+  const unpaid=D.players.filter(p=>!p.paid).map(p=>p.name);
+  pb.innerHTML=
+   `<div class="potcard">`+
+     `<div class="pottag">Main pot · all 12 in</div>`+
+     `<div class="potval">€600</div>`+
+     `<div class="prizelist">`+
+       `<div class="prizerow"><span class="pz">🏆 €500</span><span class="pzl">World Cup winner — whoever owns the team that lifts the trophy</span></div>`+
+       `<div class="prizerow"><span class="pz">🥈 €50</span><span class="pzl">Runner-up — owner of the beaten finalists</span></div>`+
+       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — worst by points, then goal difference</span></div>`+
+     `</div>`+
+   `</div>`+
+   `<div class="potcard">`+
+     `<div class="pottag">App game pot · this leaderboard</div>`+
+     `<div class="potval">€${apppot}</div>`+
+     `<div class="potlbl">winner takes all — tops this table</div>`+
+     `<div class="potmeta">€${fee} each · ${paid.length}/12 paid`+(unpaid.length?` · still to pay: ${unpaid.join(', ')}`:` · everyone in!`)+`</div>`+
+   `</div>`;
 })();
 
 function buildLeaderboard(){
