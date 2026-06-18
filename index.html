@@ -200,6 +200,7 @@
   .prizerow .curr{display:inline-block;margin-top:4px;color:var(--magenta);font-weight:800;font-size:12px}
   .favbox{margin:14px auto 0;max-width:540px;background:rgba(4,245,255,.10);border:1px solid rgba(4,245,255,.4);border-radius:10px;padding:10px 13px;color:var(--txt);font-size:13px;font-weight:600}
   .favbox .favrk{color:var(--cyan);font-weight:800}
+  .pill.favpill{background:rgba(4,245,255,.16);border-color:var(--cyan);color:#0a6470}
 </style>
 </head>
 <body>
@@ -391,7 +392,7 @@ function buildLeaderboard(){
   const ranked=[...D.players].map(p=>({p,total:playerTotal(p)})).sort((a,b)=>b.total-a.total);
   ranked.forEach(({p,total},i)=>{
     const row=document.createElement('div'); row.className='row r'+(i+1);
-    const pills=(p.teams||[]).map(c=>{const t=D.teams[c];return t?`<span class="pill">${flagImg(c)} ${c}</span>`:'';}).join('')
+    const pills=(p.teams||[]).map(c=>{const t=D.teams[c];if(!t)return '';const fv=c===D.favourite;return `<span class="pill${fv?' favpill':''}" ${fv?'title="Bookies favourite to win the World Cup"':''}>${flagImg(c)} ${c}${fv?' ⭐':''}</span>`;}).join('')
       ||'<span class="pill">No teams yet</span>';
     const av=p.photo
       ?`<img class="avatar" src="players/${p.photo}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar',textContent:'${initials(p.name)}'}))">`
