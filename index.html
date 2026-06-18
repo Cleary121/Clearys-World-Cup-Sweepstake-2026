@@ -197,9 +197,12 @@
   .prizerow{display:flex;gap:12px;align-items:baseline;background:#faf8fc;border:1px solid var(--line);border-radius:10px;padding:9px 13px}
   .prizerow .pz{font-weight:900;color:var(--green);white-space:nowrap;min-width:74px}
   .prizerow .pzl{color:var(--txt);font-size:13px;line-height:1.4}
-  .prizerow .curr{display:inline-block;margin-top:4px;color:var(--magenta);font-weight:800;font-size:12px}
-  .favbox{margin:14px auto 0;max-width:540px;background:rgba(4,245,255,.10);border:1px solid rgba(4,245,255,.4);border-radius:10px;padding:10px 13px;color:var(--txt);font-size:13px;font-weight:600}
+  .prizerow .curr{display:block;margin-top:5px;color:var(--magenta);font-weight:800;font-size:12.5px}
+  .favbox{margin:14px auto 0;max-width:540px;background:rgba(4,245,255,.10);border:1px solid rgba(4,245,255,.4);border-radius:10px;padding:12px 14px;color:var(--txt);text-align:center}
+  .favbox .favlab{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)}
+  .favbox .favteam{display:block;margin-top:5px;font-size:15px;font-weight:700;line-height:1.45}
   .favbox .favrk{color:var(--cyan);font-weight:800}
+  .favbox .flag-img{vertical-align:-2px}
   .pill.favpill{background:rgba(4,245,255,.16);border-color:var(--cyan);color:#0a6470}
 </style>
 </head>
@@ -363,11 +366,11 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
   const unpaid=D.players.filter(p=>!p.paid).map(p=>p.name);
   const gd=p=>(p.teams||[]).reduce((a,c)=>{const t=computeTeam(c);return a+(t.gf-t.ga);},0);
   const fin=(D.matches||[]).some(m=>m.status==='FINISHED');
-  let worst="Decided once results are in";
+  let worst="to be decided once results are in";
   if(fin){ const r=[...D.players].map(p=>({p,pts:playerTotal(p),g:gd(p)})).sort((a,b)=>a.pts-b.pts||a.g-b.g)[0];
     worst=`${r.p.name} · ${r.pts} pts · GD ${r.g>=0?'+':''}${r.g}`; }
   const fav=D.favourite, ft=fav?D.teams[fav]:null;
-  const favHTML = ft ? `<div class="favbox">🎲 Bookies' favourite to win the Cup: <b>${flagImg(fav)} ${ft.name}</b> <span class="favrk">#${ft.rank}</span> · ${ownerOf(fav)}'s team</div>` : '';
+  const favHTML = ft ? `<div class="favbox"><span class="favlab">🎲 Bookies' favourite to win the Cup</span><span class="favteam">${flagImg(fav)} <b>${ft.name}</b> <span class="favrk">#${ft.rank}</span> · ${ownerOf(fav)}</span></div>` : '';
   pb.innerHTML=
    `<div class="potcard">`+
      `<div class="pottag">Main pot · all 12 in</div>`+
