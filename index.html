@@ -365,11 +365,13 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
   const fee=D.entryFee||0, paid=D.players.filter(p=>p.paid), apppot=paid.length*fee;
   const unpaid=D.players.filter(p=>!p.paid).map(p=>p.name);
   // Wooden spoon (MAIN pot): WHOLE-tournament real football pts (3 win/1 draw) + actual GD, from D.wcTable — kept separate from the sweepstake leaderboard
+  // Wooden spoon goes to the OWNER of the single worst TEAM (lowest pts, then lowest GD) over the whole tournament
   const WT=D.wcTable||{};
-  const mp=p=>(p.teams||[]).reduce((a,c)=>{const t=WT[c]||{};return {pts:a.pts+(t.pts||0),gd:a.gd+(t.gd||0)};},{pts:0,gd:0});
   let worst="to be decided once results are in";
-  if(Object.keys(WT).length){ const r=[...D.players].map(p=>{const m=mp(p);return {p,pts:m.pts,g:m.gd};}).sort((a,b)=>a.pts-b.pts||a.g-b.g)[0];
-    worst=`${r.p.name} · ${r.pts} pts · GD ${r.g>=0?'+':''}${r.g}`; }
+  const wcodes=Object.keys(WT);
+  if(wcodes.length){ const w=wcodes.map(c=>({c,pts:WT[c].pts,gd:WT[c].gd})).sort((a,b)=>a.pts-b.pts||a.gd-b.gd)[0];
+    const tn=D.teams[w.c]?D.teams[w.c].name:w.c;
+    worst=`${ownerOf(w.c)} · ${flagImg(w.c)} ${tn} · ${w.pts} pts · GD ${w.gd>=0?'+':''}${w.gd}`; }
   const fav=D.favourite, ft=fav?D.teams[fav]:null;
   const favHTML = ft ? `<div class="favbox"><span class="favlab">🎲 Bookies' favourite to win the Cup</span><span class="favteam">${flagImg(fav)} <b>${ft.name}</b> <span class="favrk">#${ft.rank}</span> · ${ownerOf(fav)}</span></div>` : '';
   pb.innerHTML=
@@ -379,7 +381,7 @@ document.querySelectorAll('.rulesnote').forEach(el=>el.innerHTML=RN_HTML);
      `<div class="prizelist">`+
        `<div class="prizerow"><span class="pz">🏆 €500</span><span class="pzl">World Cup winner — whoever owns the team that lifts the trophy</span></div>`+
        `<div class="prizerow"><span class="pz">🥈 €50</span><span class="pzl">Runner-up — owner of the beaten finalists</span></div>`+
-       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — worst by points, then goal difference<br><span class="curr">Currently last: ${worst}</span></span></div>`+
+       `<div class="prizerow"><span class="pz">🥄 €50</span><span class="pzl">Wooden spoon — owner of the single worst team (by points, then goal difference)<br><span class="curr">Worst team now: ${worst}</span></span></div>`+
      `</div>`+
      favHTML+
    `</div>`+
