@@ -641,7 +641,8 @@ window.WC_DATA = {
   var S = D.scoring || {};
   var P = window.WC_PHOTOS || {};
 
-  var state = { tab:'table', theme:'light', expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null };
+  var _savedTheme='light'; try{ _savedTheme=localStorage.getItem('cc_theme')||'light'; }catch(e){}
+  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main' };
   var screenEl = document.getElementById('screen');
 
   /* ---------- helpers ---------- */
@@ -708,15 +709,19 @@ window.WC_DATA = {
 
   /* ---------- views ---------- */
   function rankedPlayers(){
-    return D.players.map(function(p){return {p:p,total:playerTotal(p)};}).sort(function(a,b){return b.total-a.total;});
+    var arr=D.players;
+    if(state.lbMode==='app') arr=arr.filter(function(p){return p.paid;});
+    return arr.map(function(p){return {p:p,total:playerTotal(p)};}).sort(function(a,b){return b.total-a.total;});
   }
 
   function viewTable(){
-    var prevOrder=D.prevOrder||[];
+    var lbMode=state.lbMode||'main';
     var ranked=rankedPlayers();
+    var _vis=ranked.map(function(o){return o.p.id;});
+    var prevFiltered=(D.prevOrder||[]).filter(function(id){return _vis.indexOf(id)>=0;});
     var rows=ranked.map(function(o,i){
       var p=o.p, total=o.total, rankNum=i+1;
-      var prev=prevOrder.indexOf(p.id), moveHtml='';
+      var prev=prevFiltered.indexOf(p.id), moveHtml='';
       if(prev<0) moveHtml='<span style="font:800 9px Archivo;color:var(--accent)">NEW</span>';
       else { var dd=prev-i; if(dd>0) moveHtml='<span style="font:800 10px Archivo;color:var(--green)">▲'+dd+'</span>'; else if(dd<0) moveHtml='<span style="font:800 10px Archivo;color:var(--red)">▼'+(-dd)+'</span>'; else moveHtml='<span style="font:800 10px Archivo;color:var(--muted)">–</span>'; }
       var badge;
@@ -759,13 +764,15 @@ window.WC_DATA = {
         .map(function(c){return '<span style="background:var(--chip);border:1px solid var(--chip-border);border-radius:8px;padding:4px 10px;font:700 12px Archivo;color:var(--chip-ink)">'+c[0]+' <b style="color:var(--ink)">'+c[1]+'</b></span>';}).join('');
       rules='<div class="fadeup-sm" style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:14px;padding:13px 14px;margin:0 5px 13px">'
         +'<div style="display:flex;gap:6px;flex-wrap:wrap">'+chips+'</div>'
-        +'<div style="font:600 12px/1.55 Archivo;color:var(--muted);margin-top:11px"><b style="color:var(--ink)">Multi-goal</b> +2 for every goal past 2 in a match.</div>'+'<div style="font:600 12px/1.55 Archivo;color:var(--muted);margin-top:6px"><b style="color:var(--ink)">Upset</b> bonus for beating or drawing a higher-ranked team — the bigger the ranking gap, the bigger the reward.</div></div>';
+        +'<div style="font:600 12px/1.55 Archivo;color:var(--muted);margin-top:11px"><b style="color:var(--ink)">Multi-goal</b> +2 for every goal past 2 in a match.</div>'+'<div style="font:600 12px/1.55 Archivo;color:var(--muted);margin-top:6px"><b style="color:var(--ink)">Upset</b> bonus for beating or drawing a higher-ranked team — the bigger the ranking gap, the bigger the reward.</div>'+'<div style="font:600 11px/1.5 Archivo;color:var(--muted);margin-top:7px;display:flex;flex-direction:column;gap:2px"><span style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)">Rank gap \u2192 win / draw bonus</span><span>10\u201324 higher \u2192 <b style="color:var(--green)">+4</b> / <b style="color:var(--green)">+2</b></span><span>25\u201349 higher \u2192 <b style="color:var(--green)">+8</b> / <b style="color:var(--green)">+4</b></span><span>50+ higher \u2192 <b style="color:var(--green)">+12</b> / <b style="color:var(--green)">+6</b></span></div></div>';
     }
 
     return '<div class="fadeup" style="padding:15px 11px 22px">'
       +'<div style="display:flex;align-items:center;justify-content:space-between;margin:0 5px 11px">'
       +'<div style="font:800 12px Archivo;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)">Standings</div>'
       +'<button data-act="rules" style="background:var(--chip);border:1px solid var(--chip-border);color:var(--chip-ink);border-radius:999px;padding:5px 12px;font:800 11px Archivo;cursor:pointer">ⓘ Points</button></div>'
+      +'<div style="display:flex;gap:6px;margin:0 5px 10px">'+[['main','Main Pot'],['app','App Pot']].map(function(m){var active=lbMode===m[0];return '<button data-act="lbmode" data-mode="'+m[0]+'" style="border:1px solid '+(active?'var(--gold)':'var(--chip-border)')+';background:'+(active?'var(--gold)':'var(--chip)')+';color:'+(active?'#15233f':'var(--chip-ink)')+';border-radius:999px;padding:5px 13px;font:800 11px Archivo;cursor:pointer">'+m[1]+'</button>';}).join('')+'</div>'
+      +'<div style="font:600 11px/1.5 Archivo;color:var(--muted);margin:0 5px 12px">'+(lbMode==='app'?'App-game pot \u2014 only players paid in.':'All 12 players \u2014 everyone is in the main pot.')+'</div>'
       +rules
       +'<div style="display:flex;flex-direction:column;gap:9px">'+rows+'</div>'
       +'<div style="text-align:center;font:700 11px Archivo;color:var(--muted);padding:16px 0 0">Results updated '+esc(D.resultsUpdated||D.updated||'')+'</div></div>';
@@ -924,7 +931,8 @@ window.WC_DATA = {
     var el=ev.target.closest('[data-act]'); if(!el) return;
     var act=el.getAttribute('data-act');
     if(act==='tab'){ state.tab=el.getAttribute('data-tab'); state.expanded=null; render(); }
-    else if(act==='theme'){ state.theme=state.theme==='light'?'dark':'light'; render(); }
+    else if(act==='lbmode'){ state.lbMode=el.getAttribute('data-mode'); state.expanded=null; render(); }
+    else if(act==='theme'){ state.theme=state.theme==='light'?'dark':'light'; try{localStorage.setItem('cc_theme',state.theme);}catch(e){} render(); }
     else if(act==='rules'){ state.showRules=!state.showRules; render(); }
     else if(act==='expand'){ var id=el.getAttribute('data-id'); state.expanded=state.expanded===id?null:id; render(); }
     else if(act==='sort'){ var k=el.getAttribute('data-key'); if(state.sortKey===k) state.sortDir*=-1; else { state.sortKey=k; state.sortDir=(k==='name'||k==='group'||k==='owner'||k==='rank')?1:-1; } render(); }
