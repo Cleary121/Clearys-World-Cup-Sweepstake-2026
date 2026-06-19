@@ -1,0 +1,12 @@
+# Never commit secrets / credentials
+.gh_token
+*.token
+*.key
+*.pem
+.env
+.env.*
+secrets*
+*secret*
+# OS / editor noise
+.DS_Store
+Thumbs.db
