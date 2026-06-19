@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -902,6 +903,7 @@ window.WC_DATA = {
 
     var _sc=document.getElementById('scroll'); var _sy=(_sc&&render._lastTab===state.tab)?_sc.scrollTop:0;
     screenEl.setAttribute('data-theme', state.theme);
+    try{document.documentElement.style.colorScheme=state.theme;}catch(e){}
     screenEl.innerHTML = header
       + '<div class="scrollarea" id="scroll">'+body+'</div>'
       + lightboxHtml()
