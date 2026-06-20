@@ -10,8 +10,6 @@ on:
         default: "dryrun"
         type: choice
         options: [dryrun, live]
-  schedule:
-    - cron: "*/15 * * * *"   # every 15 min; commits only when results change
 permissions:
   contents: write
 jobs:
@@ -19,15 +17,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Run updater
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-          MODE: ${{ github.event.inputs.mode || 'live' }}   # scheduled runs => live
+          MODE: ${{ github.event.inputs.mode || 'live' }}
         run: python3 scripts/wc_update.py
       - name: Commit
         run: |
           git config user.name "WorldCup AutoUpdate"
           git config user.email "worldcup-bot@local"
           git add -A
-          git commit -m "WC auto-update" || echo "no change"
-          git push
+          git commit -m "WC auto-update" || { echo "no change"; exit 0; }
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin main && exit 0
+            echo "push attempt $i failed, retrying"; sleep 5
+          done
+          echo "push failed after retries"; exit 1
