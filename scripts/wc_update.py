@@ -108,13 +108,28 @@ def main():
             "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"gv":2,"status":"FINISHED"})
     new_matches.sort(key=lambda m:(m["date"],m["home"]))
 
+    prev_up={(u["home"],u["away"]):u for u in D.get("upcoming",[])}
+    nowts=datetime.datetime.now(datetime.timezone.utc); pred_calls=0
     upcoming=[]
     for f in fx:
         if f["fixture"]["status"]["short"]!="NS": continue
         hid,aid=f["teams"]["home"]["id"],f["teams"]["away"]["id"]
         home,away=IDMAP.get(hid),IDMAP.get(aid)
         if not home or not away: continue
-        upcoming.append({"dt":f["fixture"]["date"],"home":home,"away":away})
+        entry={"dt":f["fixture"]["date"],"home":home,"away":away,"fid":f["fixture"]["id"]}
+        ex=prev_up.get((home,away))
+        if ex and ex.get("wp"): entry["wp"]=ex["wp"]
+        else:
+            try:
+                kt=datetime.datetime.fromisoformat(f["fixture"]["date"].replace("Z","+00:00"))
+                if (kt-nowts).total_seconds()<48*3600 and pred_calls<15:
+                    pr=api("/predictions?fixture=%d"%f["fixture"]["id"])["response"]; pred_calls+=1
+                    pc=pr[0]["predictions"]["percent"]
+                    entry["wp"]={"h":int((pc.get("home") or "0").replace("%","").strip() or 0),
+                                 "d":int((pc.get("draw") or "0").replace("%","").strip() or 0),
+                                 "a":int((pc.get("away") or "0").replace("%","").strip() or 0)}
+            except Exception: pass
+        upcoming.append(entry)
     upcoming.sort(key=lambda m:m["dt"])
 
     st=api("/standings?league=%d&season=%d"%(LEAGUE,SEASON))
