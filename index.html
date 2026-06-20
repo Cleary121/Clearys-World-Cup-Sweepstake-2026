@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-130213';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-131326';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1706,18 +1706,18 @@ window.WC_DATA = {
     var r=D.players.map(function(pp){return {p:pp,t:playerTotal(pp)};}).sort(function(a,b){return b.t-a.t;});
     if(r.length<2) return '';
     var pool=[];
-    function push(id,tag){var L=(BANTER[id]||{})[tag]; if(L) for(var i=0;i<L.length;i++) pool.push(L[i]);}
+    function push(pl,tag){var L=(BANTER[pl.id]||{})[tag]; if(L) for(var i=0;i<L.length;i++) pool.push({p:pl,t:L[i]});}
     var bottom=r[r.length-1].p, top=r[0].p;
-    push(bottom.id,'spoon'); push(bottom.id,'slag'); push(bottom.id,'club'); push(top.id,'top');
+    push(bottom,'spoon'); push(bottom,'slag'); push(bottom,'club'); push(top,'top');
     var prev=D.prevOrder||[], faller=null, worst=0;
     r.forEach(function(o,i){var pi=prev.indexOf(o.p.id); if(pi>=0&&(i-pi)>worst){worst=i-pi;faller=o.p;}});
-    if(faller){ push(faller.id,'slag'); push(faller.id,'club'); }
-    if(!pool.length){ r.forEach(function(o){push(o.p.id,'slag');}); }
+    if(faller){ push(faller,'slag'); push(faller,'club'); }
+    if(!pool.length){ r.forEach(function(o){push(o.p,'slag');}); }
     if(!pool.length) return '';
-    var line=pool[Math.floor(Date.now()/3600000)%pool.length];
-    return '<div style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:12px;padding:10px 13px;margin:0 5px 13px">'
-      +'<div style="font:800 9px Archivo;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px">Today&#39;s burn 🔥</div>'
-      +'<div style="font:600 12.5px/1.5 Archivo;color:var(--ink)">'+esc(line)+'</div></div>';
+    var pick=pool[Math.floor(Date.now()/3600000)%pool.length], ph=photoSrc(pick.p);
+    return '<div style="display:flex;gap:10px;align-items:center;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:12px;padding:10px 13px;margin:0 5px 13px">'
+      +(ph?'<img src="'+ph+'" alt="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;border:1.5px solid var(--card-border)">':'')
+      +'<div style="min-width:0"><div style="font:800 9px Archivo;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:2px">Today&#39;s burn 🔥 · '+esc(pick.p.name)+'</div><div style="font:600 12px/1.45 Archivo;color:var(--ink)">'+esc(pick.t)+'</div></div></div>';
   }
 
   function liveCardHtml(){
