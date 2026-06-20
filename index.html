@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-113018';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-114954';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1676,6 +1676,17 @@ window.WC_DATA = {
     return arr.map(function(p){return {p:p,total:playerTotal(p)};}).sort(function(a,b){return b.total-a.total;});
   }
 
+  function livePts(gf,ga,yc,rc,myRank,oppRank){
+    if(gf==null||ga==null) return 0;
+    var res=gf>ga?'win':(gf===ga?'draw':null), p=0;
+    if(res==='win') p+=S.win; else if(res==='draw') p+=S.draw;
+    p+=gf*S.goalFor;
+    if(gf>S.multiGoalOver) p+=(gf-S.multiGoalOver)*S.multiGoalBonusPer;
+    p+=(yc||0)*S.yellow+(rc||0)*S.red;
+    if(res&&myRank!=null&&oppRank!=null){ var gap=myRank-oppRank; if(gap>=(S.upsetMinGap||999)){ var ts=S.upsetTiers||[]; for(var i=0;i<ts.length;i++){ if(gap>=ts[i].minGap){ p+=res==='win'?ts[i].win:ts[i].draw; break; } } } }
+    return p;
+  }
+
   function liveCardHtml(){
     if(!LIVE.length) return '';
     return LIVE.map(function(m){
@@ -1685,13 +1696,15 @@ window.WC_DATA = {
       var _un=function(mc,ms,oc,os){var res=ms>os?'win':(ms===os?'draw':null);if(!res)return null;var t=D.teams[mc],ot=D.teams[oc];if(!t||!ot)return null;var gap=t.rank-ot.rank;if(gap<(S.upsetMinGap||999))return null;var b=0,ts=S.upsetTiers||[];for(var i=0;i<ts.length;i++){if(gap>=ts[i].minGap){b=res==='win'?ts[i].win:ts[i].draw;break;}}if(!b)return null;return '\u26a1 '+esc(ownerOf(mc))+"'s "+esc(t.name)+' '+(res==='win'?'leading':'holding')+' '+esc(ot.name)+' \u00b7 +'+b+' brewing';};
       var _u=[]; var _uh=_un(m.home,_hs,m.away,_as); if(_uh)_u.push(_uh); var _ua=_un(m.away,_as,m.home,_hs); if(_ua)_u.push(_ua);
       var upsetLine=_u.length?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--card-soft-border);font:800 10.5px/1.5 Archivo;color:var(--green);text-align:center">'+_u.join('<br>')+'</div>':'';
+      var _rH=(D.teams[m.home]||{}).rank, _rA=(D.teams[m.away]||{}).rank;
+      var _ph=livePts(_hs,_as,m.hy,m.hr,_rH,_rA), _pa=livePts(_as,_hs,m.ay,m.ar,_rA,_rH);
       return '<div style="background:var(--card);border:2px solid var(--accent);border-radius:16px;box-shadow:3px 4px 0 var(--shadow);padding:11px 13px;margin:0 5px 13px">'
         +'<div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:8px"><span class="livedot" style="width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block"></span><span style="font:800 10px Archivo;letter-spacing:.14em;color:var(--accent);text-transform:uppercase">Live &middot; '+esc(min)+'</span></div>'
         +'<div style="display:flex;align-items:center;gap:8px">'
         +'<span style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:7px;text-align:right;font:800 14px Archivo;color:var(--ink)">'+esc(tH?tH.name:m.home)+' '+flagImg(m.home,24,16,2)+'</span>'
         +'<span style="font:900 20px Archivo;color:var(--ink);min-width:54px;text-align:center">'+(m.hs==null?0:m.hs)+' &ndash; '+(m.as==null?0:m.as)+'</span>'
         +'<span style="flex:1;display:flex;align-items:center;gap:7px;font:800 14px Archivo;color:var(--ink)">'+flagImg(m.away,24,16,2)+' '+esc(tA?tA.name:m.away)+'</span></div>'
-        +'<div style="display:flex;justify-content:space-between;margin-top:7px;font:700 10.5px Archivo;color:var(--muted)"><span>'+esc(ownerOf(m.home))+'</span><span>'+esc(ownerOf(m.away))+'</span></div>'+upsetLine+'</div>';
+        +'<div style="display:flex;justify-content:space-between;margin-top:7px;font:700 11px Archivo;color:var(--muted)"><span>'+esc(ownerOf(m.home))+' <b style="color:'+(_ph<0?'var(--red)':'var(--green)')+'">'+(_ph>0?'+':'')+_ph+' pts</b></span><span>'+esc(ownerOf(m.away))+' <b style="color:'+(_pa<0?'var(--red)':'var(--green)')+'">'+(_pa>0?'+':'')+_pa+' pts</b></span></div>'+upsetLine+'</div>';
     }).join('');
   }
 
