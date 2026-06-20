@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-111521';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-112125';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1693,7 +1693,7 @@ window.WC_DATA = {
       var tH=D.teams[m.home], tA=D.teams[m.away];
       var t=new Date(m.dt); var hhmm=('0'+t.getHours()).slice(-2)+':'+('0'+t.getMinutes()).slice(-2);
       var wp=m.wp, bar='';
-      if(wp&&(wp.h||wp.d||wp.a)){ bar='<div style="display:flex;height:5px;border-radius:3px;overflow:hidden;margin-top:7px"><div style="width:'+wp.h+'%;background:var(--green)"></div><div style="width:'+wp.d+'%;background:var(--chip-border)"></div><div style="width:'+wp.a+'%;background:var(--accent)"></div></div><div style="display:flex;justify-content:space-between;font:700 9px Archivo;color:var(--muted);margin-top:3px"><span>'+wp.h+'%</span><span>draw '+wp.d+'%</span><span>'+wp.a+'%</span></div>'; }
+      if(wp&&(wp.h||wp.d||wp.a)){ bar='<div style="font:700 8px Archivo;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:8px;margin-bottom:3px">Win chance \u00b7 bookmaker odds</div><div style="display:flex;height:6px;border-radius:3px;overflow:hidden"><div style="width:'+wp.h+'%;background:var(--green)"></div><div style="width:'+wp.d+'%;background:var(--chip-border)"></div><div style="width:'+wp.a+'%;background:var(--accent)"></div></div><div style="display:flex;justify-content:space-between;font:700 9.5px Archivo;color:var(--muted);margin-top:3px"><span><b style="color:var(--ink)">'+esc(m.home)+'</b> '+wp.h+'%</span><span>Draw '+wp.d+'%</span><span><b style="color:var(--ink)">'+esc(m.away)+'</b> '+wp.a+'%</span></div>'; }
       return '<div style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:11px;padding:8px 11px">'
         +'<div style="display:flex;align-items:center;gap:8px">'
         +'<span style="font:800 12px Archivo;color:var(--ink);min-width:42px">'+hhmm+'</span>'

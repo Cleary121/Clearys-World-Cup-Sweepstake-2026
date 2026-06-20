@@ -118,16 +118,16 @@ def main():
         if not home or not away: continue
         entry={"dt":f["fixture"]["date"],"home":home,"away":away,"fid":f["fixture"]["id"]}
         ex=prev_up.get((home,away))
-        if ex and ex.get("wp"): entry["wp"]=ex["wp"]
+        if ex and ex.get("wp") and ex["wp"].get("v")==2: entry["wp"]=ex["wp"]
         else:
             try:
                 kt=datetime.datetime.fromisoformat(f["fixture"]["date"].replace("Z","+00:00"))
                 if (kt-nowts).total_seconds()<48*3600 and pred_calls<15:
-                    pr=api("/predictions?fixture=%d"%f["fixture"]["id"])["response"]; pred_calls+=1
-                    pc=pr[0]["predictions"]["percent"]
-                    entry["wp"]={"h":int((pc.get("home") or "0").replace("%","").strip() or 0),
-                                 "d":int((pc.get("draw") or "0").replace("%","").strip() or 0),
-                                 "a":int((pc.get("away") or "0").replace("%","").strip() or 0)}
+                    od=api("/odds?fixture=%d&bet=1"%f["fixture"]["id"])["response"]; pred_calls+=1
+                    o={}
+                    for v in od[0]["bookmakers"][0]["bets"][0]["values"]: o[v["value"].lower()]=float(v["odd"])
+                    ih,idr,ia=1.0/o["home"],1.0/o["draw"],1.0/o["away"]; tot=ih+idr+ia
+                    entry["wp"]={"h":round(ih/tot*100),"d":round(idr/tot*100),"a":round(ia/tot*100),"v":2}
             except Exception: pass
         upcoming.append(entry)
     upcoming.sort(key=lambda m:m["dt"])
