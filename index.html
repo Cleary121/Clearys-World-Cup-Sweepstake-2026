@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-104158';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-104238';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1612,6 +1612,8 @@ window.WC_DATA = {
     var rows=list.map(function(m){
       var tH=D.teams[m.home], tA=D.teams[m.away];
       var t=new Date(m.dt); var hhmm=('0'+t.getHours()).slice(-2)+':'+('0'+t.getMinutes()).slice(-2);
+      var wp=m.wp, bar='';
+      if(wp&&(wp.h||wp.d||wp.a)){ bar='<div style="display:flex;height:5px;border-radius:3px;overflow:hidden;margin-top:7px"><div style="width:'+wp.h+'%;background:var(--green)"></div><div style="width:'+wp.d+'%;background:var(--chip-border)"></div><div style="width:'+wp.a+'%;background:var(--accent)"></div></div><div style="display:flex;justify-content:space-between;font:700 9px Archivo;color:var(--muted);margin-top:3px"><span>'+wp.h+'%</span><span>draw '+wp.d+'%</span><span>'+wp.a+'%</span></div>'; }
       return '<div style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:11px;padding:8px 11px">'
         +'<div style="display:flex;align-items:center;gap:8px">'
         +'<span style="font:800 12px Archivo;color:var(--ink);min-width:42px">'+hhmm+'</span>'
@@ -1619,7 +1621,7 @@ window.WC_DATA = {
         +'<span style="font:700 10px Archivo;color:var(--muted)">v</span>'
         +'<span style="flex:1;display:flex;align-items:center;gap:6px;font:700 12px Archivo;color:var(--ink)">'+flagImg(m.away,20,14,2)+' '+esc(tA?tA.name:m.away)+'</span>'
         +'<span class="wccd" data-dt="'+esc(m.dt)+'" style="font:800 10px Archivo;color:var(--accent);min-width:54px;text-align:right"></span></div>'
-        +'<div style="display:flex;justify-content:space-between;margin-top:5px;font:700 9.5px Archivo;color:var(--muted)"><span>'+esc(ownerOf(m.home))+'</span><span>'+esc(ownerOf(m.away))+'</span></div></div>';
+        +'<div style="display:flex;justify-content:space-between;margin-top:5px;font:700 9.5px Archivo;color:var(--muted)"><span>'+esc(ownerOf(m.home))+'</span><span>'+esc(ownerOf(m.away))+'</span></div>'+bar+'</div>';
     }).join('');
     return '<div style="margin:0 5px 13px"><div style="font:800 10px Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 7px">Matches today</div><div style="display:flex;flex-direction:column;gap:6px">'+rows+'</div></div>';
   }
