@@ -108,6 +108,15 @@ def main():
             "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"status":"FINISHED"})
     new_matches.sort(key=lambda m:(m["date"],m["home"]))
 
+    upcoming=[]
+    for f in fx:
+        if f["fixture"]["status"]["short"]!="NS": continue
+        hid,aid=f["teams"]["home"]["id"],f["teams"]["away"]["id"]
+        home,away=IDMAP.get(hid),IDMAP.get(aid)
+        if not home or not away: continue
+        upcoming.append({"dt":f["fixture"]["date"],"home":home,"away":away})
+    upcoming.sort(key=lambda m:m["dt"])
+
     st=api("/standings?league=%d&season=%d"%(LEAGUE,SEASON))
     wctable={}; seen=set()
     for grp in st["response"][0]["league"]["standings"]:
@@ -118,7 +127,7 @@ def main():
             if code: wctable[code]={"pts":row["points"],"gd":row["goalsDiff"]}
 
     def sig(ms): return sorted([m["home"],m["away"],m["hs"],m["as"],m["hy"],m["ay"],m["hr"],m["ar"]] for m in ms)
-    changed = sig(new_matches)!=sig(D.get("matches",[])) or wctable!=D.get("wcTable",{}) or any("goals" not in m for m in D.get("matches",[]))
+    changed = sig(new_matches)!=sig(D.get("matches",[])) or wctable!=D.get("wcTable",{}) or any("goals" not in m for m in D.get("matches",[])) or upcoming!=D.get("upcoming")
     now=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")
     board=sorted(players,key=lambda p:-player_total(p,new_matches,teams,S))
     lines=["%2d. %-8s %4d pts"%(i+1,p["name"],player_total(p,new_matches,teams,S)) for i,p in enumerate(board)]
@@ -130,14 +139,14 @@ def main():
 
     if MODE=="dryrun":
         open("_dryrun.txt","w").write(summary)
-        D2=dict(D); D2["matches"]=new_matches; D2["wcTable"]=wctable
+        D2=dict(D); D2["matches"]=new_matches; D2["wcTable"]=wctable; D2["upcoming"]=upcoming
         D2["prevOrder"]=order(players,D.get("matches",[]),teams,S); D2["resultsUpdated"]=now; D2["updated"]=now
         open("_dryrun_index.html","w",encoding="utf-8").write(html[:s]+json.dumps(D2,ensure_ascii=False,indent=2)+html[e:])
         return
     if not changed:
         print("No change - skipping commit."); open("_nochange.txt","w").write(now); return
     D["prevOrder"]=order(players,D.get("matches",[]),teams,S)
-    D["matches"]=new_matches; D["wcTable"]=wctable; D["resultsUpdated"]=now; D["updated"]=now
+    D["matches"]=new_matches; D["wcTable"]=wctable; D["upcoming"]=upcoming; D["resultsUpdated"]=now; D["updated"]=now
     newhtml=html[:s]+json.dumps(D,ensure_ascii=False,indent=2)+html[e:]
     stamp=datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S")
     newhtml=re.sub(r"var V='[0-9-]+'","var V='%s'"%stamp,newhtml,count=1)
