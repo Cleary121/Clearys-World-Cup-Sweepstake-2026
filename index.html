@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-104751';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-111043';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1781,10 +1781,15 @@ window.WC_DATA = {
     var fee=D.entryFee||0;
     var paid=D.players.filter(function(p){return p.paid;}), unpaid=D.players.filter(function(p){return !p.paid;}).map(function(p){return p.name;});
     var appPot=paid.length*fee;
-    var WT=D.wcTable||{}, worstText='to be decided', worstEl='';
+    var WT=D.wcTable||{}, worstHtml='to be decided';
     var wc=Object.keys(WT);
-    if(wc.length){ var w=wc.map(function(c){return {c:c,pts:WT[c].pts,gd:WT[c].gd};}).sort(function(a,b){return a.pts-b.pts||a.gd-b.gd;})[0];
-      var tn=D.teams[w.c]?D.teams[w.c].name:w.c; worstText=tn+' · '+ownerOf(w.c)+' · '+w.pts+'p '+(w.gd>=0?'+':'')+w.gd; worstEl=flagImg(w.c,18,12,2); }
+    if(wc.length){
+      var _arr=wc.map(function(c){return {c:c,pts:WT[c].pts,gd:WT[c].gd};}).sort(function(a,b){return a.pts-b.pts||a.gd-b.gd;});
+      var _w0=_arr[0], _tied=_arr.filter(function(x){return x.pts===_w0.pts&&x.gd===_w0.gd;});
+      var _sc=_w0.pts+'p '+(_w0.gd>=0?'+':'')+_w0.gd;
+      if(_tied.length===1){ worstHtml=flagImg(_w0.c,18,12,2)+' '+esc((D.teams[_w0.c]||{}).name||_w0.c)+' · '+esc(ownerOf(_w0.c))+' · '+_sc; }
+      else { worstHtml=_tied.map(function(x){return flagImg(x.c,18,12,2)+' '+esc((D.teams[x.c]||{}).name||x.c)+' ('+esc(ownerOf(x.c))+')';}).join(' &nbsp;·&nbsp; ')+' · '+_sc+' (shared)'; }
+    }
     var fav=D.favourite, ft=fav?D.teams[fav]:null;
     var favEl=(fav&&ft)?flagImg(fav,22,15,2):'';
 
@@ -1796,7 +1801,7 @@ window.WC_DATA = {
         +'<div style="display:flex;flex-direction:column;gap:8px;margin-top:15px;text-align:left">'
           +'<div style="display:flex;gap:11px;align-items:baseline;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:10px;padding:10px 13px"><span style="font:900 14px Archivo;color:var(--green);white-space:nowrap;min-width:62px">🏆 €500</span><span style="font:600 12.5px/1.4 Archivo;color:var(--ink)">World Cup winner — whoever owns the team that lifts the trophy</span></div>'
           +'<div style="display:flex;gap:11px;align-items:baseline;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:10px;padding:10px 13px"><span style="font:900 14px Archivo;color:var(--green);white-space:nowrap;min-width:62px">🥈 €50</span><span style="font:600 12.5px/1.4 Archivo;color:var(--ink)">Runner-up — owner of the beaten finalists</span></div>'
-          +'<div style="display:flex;gap:11px;align-items:baseline;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:10px;padding:10px 13px"><span style="font:900 14px Archivo;color:var(--green);white-space:nowrap;min-width:62px">🥄 €50</span><span style="font:600 12.5px/1.4 Archivo;color:var(--ink)">Wooden spoon — owner of the single worst team (points, then goal difference)<br><span style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:800;margin-top:5px">'+worstEl+esc(worstText)+'</span></span></div>'
+          +'<div style="display:flex;gap:11px;align-items:baseline;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:10px;padding:10px 13px"><span style="font:900 14px Archivo;color:var(--green);white-space:nowrap;min-width:62px">🥄 €50</span><span style="font:600 12.5px/1.4 Archivo;color:var(--ink)">Wooden spoon — owner of the worst team (points, then goal difference; shared if tied)<br><span style="display:block;color:var(--accent);font-weight:800;margin-top:5px;line-height:1.55">'+worstHtml+'</span></span></div>'
         +'</div>'
         +'<div style="margin-top:14px;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:10px;padding:11px 13px"><div style="font:800 10px Archivo;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)">🎲 Bookies\' favourite to win the Cup</div>'
         +'<div style="display:inline-flex;align-items:center;gap:7px;margin-top:6px;font:700 14px Archivo;color:var(--ink)">'+favEl+'<b>'+esc(ft?ft.name:'—')+'</b> <span style="color:var(--accent);font-weight:800">#'+(ft?ft.rank:'')+'</span> · '+esc(fav?ownerOf(fav):'—')+'</div></div>'
