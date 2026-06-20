@@ -85,7 +85,7 @@ def main():
         if not home or not away: notes.append("UNMAPPED %s/%s"%(hid,aid)); continue
         hs,as_=f["goals"]["home"],f["goals"]["away"]
         ex=existing.get((home,away))
-        reuse = MODE=="live" and ex and ex.get("hs")==hs and ex.get("as")==as_ and "hy" in ex and "goals" in ex
+        reuse = MODE=="live" and ex and ex.get("hs")==hs and ex.get("as")==as_ and "hy" in ex and "goals" in ex and ex.get("gv")==2
         if reuse:
             hy,ay,hr,ar=ex["hy"],ex["ay"],ex["hr"],ex["ar"]; goals=ex.get("goals",[]); cards=ex.get("cards",[])
         else:
@@ -102,10 +102,10 @@ def main():
                     else: ar+=1 if red else 0; ay+=1 if yellow else 0
                     cards.append({"s":side,"p":pl,"m":mn,"c":"r" if red else "y"})
                 elif typ=="Goal" and det!="Missed Penalty":
-                    og=(det=="Own Goal"); disp=side if not og else ("a" if side=="h" else "h")
-                    goals.append({"s":disp,"p":pl,"m":mn,"og":og,"pen":det=="Penalty"})
+                    if not pl: continue
+                    goals.append({"s":side,"p":pl,"m":mn,"og":det=="Own Goal","pen":det=="Penalty"})
         new_matches.append({"date":f["fixture"]["date"][:10],"home":home,"away":away,
-            "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"status":"FINISHED"})
+            "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"gv":2,"status":"FINISHED"})
     new_matches.sort(key=lambda m:(m["date"],m["home"]))
 
     upcoming=[]
@@ -127,7 +127,7 @@ def main():
             if code: wctable[code]={"pts":row["points"],"gd":row["goalsDiff"]}
 
     def sig(ms): return sorted([m["home"],m["away"],m["hs"],m["as"],m["hy"],m["ay"],m["hr"],m["ar"]] for m in ms)
-    changed = sig(new_matches)!=sig(D.get("matches",[])) or wctable!=D.get("wcTable",{}) or any("goals" not in m for m in D.get("matches",[])) or upcoming!=D.get("upcoming")
+    changed = sig(new_matches)!=sig(D.get("matches",[])) or wctable!=D.get("wcTable",{}) or any("goals" not in m for m in D.get("matches",[])) or any(m.get("gv")!=2 for m in D.get("matches",[])) or upcoming!=D.get("upcoming")
     now=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")
     board=sorted(players,key=lambda p:-player_total(p,new_matches,teams,S))
     lines=["%2d. %-8s %4d pts"%(i+1,p["name"],player_total(p,new_matches,teams,S)) for i,p in enumerate(board)]
