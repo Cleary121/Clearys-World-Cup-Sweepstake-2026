@@ -1,4 +1,7 @@
 name: WC Update
+concurrency:
+  group: wc-update
+  cancel-in-progress: false
 on:
   workflow_dispatch:
     inputs:
