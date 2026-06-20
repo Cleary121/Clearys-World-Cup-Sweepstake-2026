@@ -1,0 +1,30 @@
+name: WC Update
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dryrun (preview only) or live (updates the site)"
+        default: "dryrun"
+        type: choice
+        options: [dryrun, live]
+  # schedule:                     # enable after we verify the dry run
+  #   - cron: "*/15 * * * *"
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run updater
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          MODE: ${{ github.event.inputs.mode || 'dryrun' }}
+        run: python3 scripts/wc_update.py
+      - name: Commit
+        run: |
+          git config user.name "WorldCup AutoUpdate"
+          git config user.email "worldcup-bot@local"
+          git add -A
+          git commit -m "WC update (${{ github.event.inputs.mode || 'dryrun' }})" || echo "no change"
+          git push
