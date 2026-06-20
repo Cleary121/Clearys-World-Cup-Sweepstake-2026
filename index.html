@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-114954';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-115936';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1602,7 +1602,7 @@ window.WC_DATA = {
   var P = window.WC_PHOTOS || {};
 
   var _savedTheme='light'; try{ _savedTheme=localStorage.getItem('cc_theme')||'light'; }catch(e){}
-  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{} };
+  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{}, todayExpanded:false };
   var LIVE=[];
   var WORKER_URL='https://wc-live.davidgcleary.workers.dev/';
   var screenEl = document.getElementById('screen');
@@ -1714,7 +1714,8 @@ window.WC_DATA = {
     var today=ymd(new Date());
     var list=up.filter(function(m){return ymd(new Date(m.dt))===today;});
     if(!list.length) return '';
-    var rows=list.map(function(m){
+    var _exp=state.todayExpanded, _shown=_exp?list:list.slice(0,2);
+    var rows=_shown.map(function(m){
       var tH=D.teams[m.home], tA=D.teams[m.away];
       var t=new Date(m.dt); var hhmm=('0'+t.getHours()).slice(-2)+':'+('0'+t.getMinutes()).slice(-2);
       var wp=m.wp, bar='';
@@ -1728,7 +1729,8 @@ window.WC_DATA = {
         +'<span class="wccd" data-dt="'+esc(m.dt)+'" style="font:800 10px Archivo;color:var(--accent);min-width:54px;text-align:right"></span></div>'
         +'<div style="display:flex;justify-content:space-between;margin-top:5px;font:700 9.5px Archivo;color:var(--muted)"><span>'+esc(ownerOf(m.home))+'</span><span>'+esc(ownerOf(m.away))+'</span></div>'+bar+'</div>';
     }).join('');
-    return '<div style="margin:0 5px 13px"><div style="font:800 10px Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 7px">Matches today</div><div style="display:flex;flex-direction:column;gap:6px">'+rows+'</div></div>';
+    var _more=list.length>2?'<button data-act="todaymore" style="width:100%;margin-top:7px;background:var(--chip);border:1px solid var(--chip-border);color:var(--chip-ink);border-radius:10px;padding:7px;font:800 11px Archivo;cursor:pointer">'+(_exp?'Show less':'+'+(list.length-2)+' more today')+'</button>':'';
+    return '<div style="margin:0 5px 13px"><div style="font:800 10px Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 7px">Matches today</div><div style="display:flex;flex-direction:column;gap:6px">'+rows+'</div>'+_more+'</div>';
   }
   function tickCountdowns(){
     var els=document.querySelectorAll('.wccd'); var now=Date.now();
@@ -1992,6 +1994,7 @@ window.WC_DATA = {
     else if(act==='rules'){ state.showRules=!state.showRules; render(); }
     else if(act==='expand'){ var id=el.getAttribute('data-id'); state.expanded=state.expanded===id?null:id; render(); }
     else if(act==='resx'){ var rk=el.getAttribute('data-k'); state.resExpanded[rk]=!state.resExpanded[rk]; render(); }
+    else if(act==='todaymore'){ state.todayExpanded=!state.todayExpanded; render(); }
     else if(act==='sort'){ var k=el.getAttribute('data-key'); if(state.sortKey===k) state.sortDir*=-1; else { state.sortKey=k; state.sortDir=(k==='name'||k==='group'||k==='owner'||k==='rank')?1:-1; } render(); }
     else if(act==='photo'){ ev.stopPropagation(); state.lightbox=el.getAttribute('data-id'); render(); }
     else if(act==='closelb'){ state.lightbox=null; render(); }
