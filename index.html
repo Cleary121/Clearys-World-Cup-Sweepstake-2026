@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-115936';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-120432';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1726,7 +1726,7 @@ window.WC_DATA = {
         +'<span style="flex:1;display:flex;align-items:center;gap:6px;justify-content:flex-end;text-align:right;font:700 12px Archivo;color:var(--ink)">'+esc(tH?tH.name:m.home)+' '+flagImg(m.home,20,14,2)+'</span>'
         +'<span style="font:700 10px Archivo;color:var(--muted)">v</span>'
         +'<span style="flex:1;display:flex;align-items:center;gap:6px;font:700 12px Archivo;color:var(--ink)">'+flagImg(m.away,20,14,2)+' '+esc(tA?tA.name:m.away)+'</span>'
-        +'<span class="wccd" data-dt="'+esc(m.dt)+'" style="font:800 10px Archivo;color:var(--accent);min-width:54px;text-align:right"></span></div>'
+        +'<span class="wccd" data-dt="'+esc(m.dt)+'" style="font:800 10px Archivo;color:var(--accent);min-width:54px;text-align:right;white-space:nowrap"></span></div>'
         +'<div style="display:flex;justify-content:space-between;margin-top:5px;font:700 9.5px Archivo;color:var(--muted)"><span>'+esc(ownerOf(m.home))+'</span><span>'+esc(ownerOf(m.away))+'</span></div>'+bar+'</div>';
     }).join('');
     var _more=list.length>2?'<button data-act="todaymore" style="width:100%;margin-top:7px;background:var(--chip);border:1px solid var(--chip-border);color:var(--chip-ink);border-radius:10px;padding:7px;font:800 11px Archivo;cursor:pointer">'+(_exp?'Show less':'+'+(list.length-2)+' more today')+'</button>':'';
@@ -1735,8 +1735,9 @@ window.WC_DATA = {
   function tickCountdowns(){
     var els=document.querySelectorAll('.wccd'); var now=Date.now();
     for(var i=0;i<els.length;i++){ var dt=new Date(els[i].getAttribute('data-dt')).getTime(); var diff=dt-now;
-      if(diff<=0){ els[i].textContent='soon'; }
-      else { var h=Math.floor(diff/3600000), mn=Math.floor((diff%3600000)/60000); els[i].textContent=h>0?('in '+h+'h '+mn+'m'):('in '+mn+'m'); } }
+      if(diff<=0){ els[i].textContent='Kicked off'; els[i].style.animation=''; }
+      else if(diff<=300000){ els[i].textContent='Kicks off soon'; els[i].style.animation='lpulse 1.2s ease-in-out infinite'; }
+      else { els[i].style.animation=''; var h=Math.floor(diff/3600000), mn=Math.floor((diff%3600000)/60000); els[i].textContent=h>0?('in '+h+'h '+mn+'m'):('in '+mn+'m'); } }
   }
 
   function viewTable(){
