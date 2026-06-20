@@ -85,20 +85,27 @@ def main():
         if not home or not away: notes.append("UNMAPPED %s/%s"%(hid,aid)); continue
         hs,as_=f["goals"]["home"],f["goals"]["away"]
         ex=existing.get((home,away))
-        reuse = MODE=="live" and ex and ex.get("hs")==hs and ex.get("as")==as_ and "hy" in ex
+        reuse = MODE=="live" and ex and ex.get("hs")==hs and ex.get("as")==as_ and "hy" in ex and "goals" in ex
         if reuse:
-            hy,ay,hr,ar=ex["hy"],ex["ay"],ex["hr"],ex["ar"]
+            hy,ay,hr,ar=ex["hy"],ex["ay"],ex["hr"],ex["ar"]; goals=ex.get("goals",[]); cards=ex.get("cards",[])
         else:
             ev=api("/fixtures/events?fixture=%d"%f["fixture"]["id"])["response"]; events_calls+=1
-            hy=ay=hr=ar=0
+            hy=ay=hr=ar=0; goals=[]; cards=[]
             for x in ev:
-                if x.get("type")!="Card": continue
-                tid=x.get("team",{}).get("id"); det=x.get("detail","")
-                red=("Red" in det); yellow=(det=="Yellow Card")
-                if tid==hid: hr+=1 if red else 0; hy+=1 if yellow else 0
-                elif tid==aid: ar+=1 if red else 0; ay+=1 if yellow else 0
+                typ=x.get("type"); det=x.get("detail",""); tid=x.get("team",{}).get("id")
+                pl=(x.get("player") or {}).get("name"); mn=(x.get("time") or {}).get("elapsed")
+                side="h" if tid==hid else ("a" if tid==aid else None)
+                if side is None: continue
+                if typ=="Card":
+                    red=("Red" in det); yellow=(det=="Yellow Card")
+                    if side=="h": hr+=1 if red else 0; hy+=1 if yellow else 0
+                    else: ar+=1 if red else 0; ay+=1 if yellow else 0
+                    cards.append({"s":side,"p":pl,"m":mn,"c":"r" if red else "y"})
+                elif typ=="Goal" and det!="Missed Penalty":
+                    og=(det=="Own Goal"); disp=side if not og else ("a" if side=="h" else "h")
+                    goals.append({"s":disp,"p":pl,"m":mn,"og":og,"pen":det=="Penalty"})
         new_matches.append({"date":f["fixture"]["date"][:10],"home":home,"away":away,
-            "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"status":"FINISHED"})
+            "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"status":"FINISHED"})
     new_matches.sort(key=lambda m:(m["date"],m["home"]))
 
     st=api("/standings?league=%d&season=%d"%(LEAGUE,SEASON))
@@ -111,7 +118,7 @@ def main():
             if code: wctable[code]={"pts":row["points"],"gd":row["goalsDiff"]}
 
     def sig(ms): return sorted([m["home"],m["away"],m["hs"],m["as"],m["hy"],m["ay"],m["hr"],m["ar"]] for m in ms)
-    changed = sig(new_matches)!=sig(D.get("matches",[])) or wctable!=D.get("wcTable",{})
+    changed = sig(new_matches)!=sig(D.get("matches",[])) or wctable!=D.get("wcTable",{}) or any("goals" not in m for m in D.get("matches",[]))
     now=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")
     board=sorted(players,key=lambda p:-player_total(p,new_matches,teams,S))
     lines=["%2d. %-8s %4d pts"%(i+1,p["name"],player_total(p,new_matches,teams,S)) for i,p in enumerate(board)]

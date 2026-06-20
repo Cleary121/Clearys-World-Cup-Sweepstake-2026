@@ -1120,12 +1120,17 @@ window.WC_DATA = {
         var score=(m.hs!=null&&m.as!=null)?(m.hs+' – '+m.as):'vs';
         var bz=matchBonuses(m);
         var bonusBar=bz.length?'<div style="background:var(--card-soft);border-top:1px solid var(--card-soft-border);padding:7px 12px;font:700 10.5px/1.5 Archivo;color:var(--green);text-align:center">⚡ '+esc(bz.join('  ·  '))+'</div>':'';
+        var _g=Array.isArray(m.goals)?m.goals:null, _c=Array.isArray(m.cards)?m.cards:null;
+        function _scl(sd){return (_g||[]).filter(function(g){return g.s===sd;}).map(function(g){return esc(g.p||'')+" "+(g.m||'')+"'"+(g.pen?' (P)':'')+(g.og?' (OG)':'');}).join('<br>');}
+        var _sh=_g?_scl('h'):'', _sa=_g?_scl('a'):'';
+        var scorers=(_sh||_sa)?'<div style="display:flex;gap:6px;padding:2px 12px 9px;font:600 11px/1.55 Archivo;color:var(--muted)"><div style="flex:1;text-align:right">'+_sh+'</div><div style="width:16px;text-align:center">⚽</div><div style="flex:1;text-align:left">'+_sa+'</div></div>':'';
+        var bookings=_c?(_c.length?'<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px 12px;padding:0 12px 9px;font:600 10.5px Archivo;color:var(--muted)">'+_c.map(function(c){return (c.c==='r'?'\ud83d\udfe5':'\ud83d\udfe8')+' '+esc((c.p||'').split(' ').slice(-1)[0])+" "+(c.m||'')+"'";}).join('')+'</div>':''):'<div style="display:flex;justify-content:center;font:600 10.5px Archivo;color:var(--muted);padding:0 0 9px;letter-spacing:.02em">\ud83d\udfe8 '+(m.hy||0)+' / '+(m.ay||0)+'      \ud83d\udfe5 '+(m.hr||0)+' / '+(m.ar||0)+'</div>';
         return '<div style="background:var(--card);border:1.5px solid var(--card-border);border-radius:13px;box-shadow:2px 3px 0 var(--shadow);overflow:hidden">'
           +'<div style="display:flex;align-items:center;padding:11px 12px;gap:8px">'
           +'<span style="flex:1;display:flex;align-items:center;gap:7px;justify-content:flex-end;text-align:right;font:700 13px Archivo;color:var(--ink)">'+esc(tH?tH.name:m.home)+' '+flagImg(m.home,24,16,2)+'</span>'
           +'<span style="font:900 18px Archivo;color:var(--ink);min-width:62px;text-align:center">'+score+'</span>'
           +'<span style="flex:1;display:flex;align-items:center;gap:7px;font:700 13px Archivo;color:var(--ink)">'+flagImg(m.away,24,16,2)+' '+esc(tA?tA.name:m.away)+'</span></div>'
-          +'<div style="display:flex;justify-content:center;font:600 10.5px Archivo;color:var(--muted);padding:0 0 9px;letter-spacing:.02em">🟨 '+(m.hy||0)+' / '+(m.ay||0)+'      🟥 '+(m.hr||0)+' / '+(m.ar||0)+'</div>'
+          +scorers+bookings
           +bonusBar+'</div>';
       }).join('');
       return '<div style="font:800 11px Archivo;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:15px 5px 8px">'+esc(fmtDate(date))+'</div>'
