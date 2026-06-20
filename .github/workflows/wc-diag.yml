@@ -1,0 +1,21 @@
+name: WC Diagnostic
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run diagnostic
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        run: python3 scripts/wc_diag.py
+      - name: Commit sample
+        run: |
+          git config user.name "WorldCup AutoUpdate"
+          git config user.email "worldcup-bot@local"
+          git add _diag.json
+          git commit -m "diagnostic: API-Football sample data" || echo "no change"
+          git push
