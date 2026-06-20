@@ -29,8 +29,9 @@ def api(path):
             time.sleep(2)
 
 def load_wcdata(html):
-    i=html.index("window.WC_DATA")
-    b=html.index("{",i); depth=0
+    m=re.search(r"window\.WC_DATA\s*=\s*\{", html)
+    if not m: raise RuntimeError("WC_DATA assignment not found")
+    b=m.end()-1; depth=0
     for j in range(b,len(html)):
         if html[j]=="{":depth+=1
         elif html[j]=="}":
