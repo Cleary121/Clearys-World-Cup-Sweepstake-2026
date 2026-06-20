@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-092102';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-092400';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1089,18 +1089,27 @@ window.WC_DATA = {
         +'<div style="text-align:right;flex:none"><div data-count="'+total+'" style="font:900 25px/1 Archivo;color:var(--accent)">'+total+'</div><div style="font:700 8px Archivo;color:var(--muted);letter-spacing:.14em;margin-top:2px">PTS</div></div></div>';
       var detail='';
       if(state.expanded===p.id){
+        var agg={p:0,w:0,d:0,l:0,gf:0}, tot=[];
+        (p.teams||[]).forEach(function(c){var s0=computeTeam(c);agg.p+=s0.played;agg.w+=s0.wins;agg.d+=s0.draws;agg.l+=s0.losses;agg.gf+=s0.gf;tot.push({c:c,t:s0.total});});
+        tot.sort(function(a,b){return b.t-a.t;});
+        var bestC=tot.length?tot[0]:null, worstC=tot.length?tot[tot.length-1]:null, bw='';
+        if(bestC){ bw+='<span style="color:var(--green);font-weight:800">▲ '+esc((D.teams[bestC.c]||{}).name||bestC.c)+' '+fmt(bestC.t)+'</span>'; }
+        if(worstC && worstC.c!==bestC.c){ bw+='<span style="color:var(--red);font-weight:800;margin-left:12px">▼ '+esc((D.teams[worstC.c]||{}).name||worstC.c)+' '+fmt(worstC.t)+'</span>'; }
+        var summary='<div style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:11px;padding:9px 11px;margin-top:7px;font:600 11.5px Archivo;color:var(--muted)"><span style="color:var(--ink);font-weight:800">'+agg.p+'P</span> '+agg.w+'W '+agg.d+'D '+agg.l+'L · '+agg.gf+'⚽'+(bw?'<div style="margin-top:5px">'+bw+'</div>':'')+'</div>';
         var trs=(p.teams||[]).map(function(c){
           var t=D.teams[c]||{}, s=computeTeam(c);
           var bonus=s.bonus?('<span style="color:var(--green);font-weight:800"> · +'+s.bonus+' bonus'+(s.upsets?' ⚡'+s.upsets:'')+'</span>'):'';
           var totCol=s.total<0?'var(--red)':'var(--ink)';
+          var nx=(D.upcoming||[]).filter(function(u){return u.home===c||u.away===c;})[0], nxt='';
+          if(nx){var opp=nx.home===c?nx.away:nx.home; var dd=new Date(nx.dt); nxt='<div style="font:600 10.5px Archivo;color:var(--muted);margin-top:4px">Next: <b style="color:var(--ink)">'+esc((D.teams[opp]||{}).name||opp)+'</b> · '+dd.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+'</div>';}
           return '<div style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:11px;padding:8px 11px;margin-top:7px">'
             +'<div style="display:flex;align-items:center;gap:9px">'+flagImg(c,30,21,3)
             +'<span style="font:800 14px Archivo;color:var(--ink)">'+esc(t.name||c)+'</span>'
             +'<span style="font:700 10px Archivo;color:var(--muted)">#'+(t.rank||'')+'</span>'
             +'<span style="margin-left:auto;font:900 16px Archivo;color:'+totCol+'">'+fmt(s.total)+'</span></div>'
-            +'<div style="font:600 11px Archivo;color:var(--muted);margin-top:5px">'+s.played+'P · '+s.wins+'W '+s.draws+'D '+s.losses+'L · '+s.gf+'⚽ · '+s.yellow+'🟨 '+s.red+'🟥'+bonus+'</div></div>';
+            +'<div style="font:600 11px Archivo;color:var(--muted);margin-top:5px">'+s.played+'P · '+s.wins+'W '+s.draws+'D '+s.losses+'L · '+s.gf+'⚽ · '+s.yellow+'🟨 '+s.red+'🟥'+bonus+'</div>'+nxt+'</div>';
         }).join('');
-        detail='<div class="fadeup-sm" style="padding:1px 3px 3px">'+trs+'</div>';
+        detail='<div class="fadeup-sm" style="padding:1px 3px 3px">'+summary+trs+'</div>';
       }
       return head+detail;
     }).join('');
