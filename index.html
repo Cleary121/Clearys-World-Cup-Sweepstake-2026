@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260620-104238';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260620-104751';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1514,7 +1514,7 @@ window.WC_DATA = {
   var P = window.WC_PHOTOS || {};
 
   var _savedTheme='light'; try{ _savedTheme=localStorage.getItem('cc_theme')||'light'; }catch(e){}
-  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main' };
+  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{} };
   var LIVE=[];
   var WORKER_URL='https://wc-live.davidgcleary.workers.dev/';
   var screenEl = document.getElementById('screen');
@@ -1740,33 +1740,43 @@ window.WC_DATA = {
 
   function viewResults(){
     var byDate={}; (D.matches||[]).forEach(function(m){ (byDate[m.date]=byDate[m.date]||[]).push(m); });
-    var days=Object.keys(byDate).sort();
-    var html=days.map(function(date){
+    var days=Object.keys(byDate).sort().reverse();
+    var sel=state.resultsDate||'';
+    var shown=sel?days.filter(function(d){return d===sel;}):days;
+    var opts='<option value="">All dates</option>'+days.map(function(d){return '<option value="'+d+'"'+(d===sel?' selected':'')+'>'+esc(fmtDate(d))+'</option>';}).join('');
+    var filter='<div style="margin:0 5px 12px"><select data-act="resdate" style="width:100%;font:700 12px Archivo;color:var(--ink);background:var(--chip);border:1px solid var(--chip-border);border-radius:10px;padding:8px 11px">'+opts+'</select></div>';
+    var html=shown.map(function(date){
       var items=byDate[date].map(function(m){
         var tH=D.teams[m.home], tA=D.teams[m.away];
-        var score=(m.hs!=null&&m.as!=null)?(m.hs+' – '+m.as):'vs';
+        var score=(m.hs!=null&&m.as!=null)?(m.hs+' \u2013 '+m.as):'vs';
         var bz=matchBonuses(m);
-        var bonusBar=bz.length?'<div style="background:var(--card-soft);border-top:1px solid var(--card-soft-border);padding:7px 12px;font:700 10.5px/1.5 Archivo;color:var(--green);text-align:center">⚡ '+esc(bz.join('  ·  '))+'</div>':'';
-        var _g=Array.isArray(m.goals)?m.goals:null, _c=Array.isArray(m.cards)?m.cards:null;
-        function _scl(sd){return (_g||[]).filter(function(g){return g.s===sd;}).map(function(g){return esc(g.p||'')+" "+(g.m||'')+"'"+(g.pen?' (P)':'')+(g.og?' (OG)':'');}).join('<br>');}
-        var _sh=_g?_scl('h'):'', _sa=_g?_scl('a'):'';
-        var scorers=(_sh||_sa)?'<div style="display:flex;gap:6px;padding:2px 12px 9px;font:600 11px/1.55 Archivo;color:var(--muted)"><div style="flex:1;text-align:right">'+_sh+'</div><div style="width:16px;text-align:center">⚽</div><div style="flex:1;text-align:left">'+_sa+'</div></div>':'';
-        var bookings=_c?(_c.length?'<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px 12px;padding:0 12px 9px;font:600 10.5px Archivo;color:var(--muted)">'+_c.map(function(c){return (c.c==='r'?'\ud83d\udfe5':'\ud83d\udfe8')+' '+esc((c.p||'').split(' ').slice(-1)[0])+" "+(c.m||'')+"'";}).join('')+'</div>':''):'<div style="display:flex;justify-content:center;font:600 10.5px Archivo;color:var(--muted);padding:0 0 9px;letter-spacing:.02em">\ud83d\udfe8 '+(m.hy||0)+' / '+(m.ay||0)+'      \ud83d\udfe5 '+(m.hr||0)+' / '+(m.ar||0)+'</div>';
+        var bonusBar=bz.length?'<div style="background:var(--card-soft);border-top:1px solid var(--card-soft-border);padding:7px 12px;font:700 10.5px/1.5 Archivo;color:var(--green);text-align:center">\u26a1 '+esc(bz.join('  \u00b7  '))+'</div>':'';
+        var key=m.date+'|'+m.home+'|'+m.away;
+        var open=!!(state.resExpanded&&state.resExpanded[key]);
+        var detail='';
+        if(open){
+          var _g=Array.isArray(m.goals)?m.goals:null, _c=Array.isArray(m.cards)?m.cards:null;
+          var _scl=function(sd){return (_g||[]).filter(function(g){return g.s===sd;}).map(function(g){return esc(g.p||'')+" "+(g.m||'')+"'"+(g.pen?' (P)':'')+(g.og?' (OG)':'');}).join('<br>');};
+          var _sh=_g?_scl('h'):'', _sa=_g?_scl('a'):'';
+          var scorers=(_sh||_sa)?'<div style="display:flex;gap:6px;padding:4px 12px 9px;font:600 11px/1.55 Archivo;color:var(--muted)"><div style="flex:1;text-align:right">'+_sh+'</div><div style="width:16px;text-align:center">\u26bd</div><div style="flex:1;text-align:left">'+_sa+'</div></div>':'';
+          var bookings=(_c&&_c.length)?'<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px 12px;padding:0 12px 9px;font:600 10.5px Archivo;color:var(--muted)">'+_c.map(function(c){return (c.c==='r'?'\ud83d\udfe5':'\ud83d\udfe8')+' '+esc((c.p||'').split(' ').slice(-1)[0])+" "+(c.m||'')+"'";}).join('')+'</div>':'';
+          detail='<div class="fadeup-sm">'+scorers+bookings+'</div>';
+        }
         return '<div style="background:var(--card);border:1.5px solid var(--card-border);border-radius:13px;box-shadow:2px 3px 0 var(--shadow);overflow:hidden">'
-          +'<div style="display:flex;align-items:center;padding:11px 12px;gap:8px">'
+          +'<div class="tap" data-act="resx" data-k="'+esc(key)+'" style="display:flex;align-items:center;padding:11px 12px;gap:8px;cursor:pointer">'
           +'<span style="flex:1;display:flex;align-items:center;gap:7px;justify-content:flex-end;text-align:right;font:700 13px Archivo;color:var(--ink)">'+esc(tH?tH.name:m.home)+' '+flagImg(m.home,24,16,2)+'</span>'
           +'<span style="font:900 18px Archivo;color:var(--ink);min-width:62px;text-align:center">'+score+'</span>'
-          +'<span style="flex:1;display:flex;align-items:center;gap:7px;font:700 13px Archivo;color:var(--ink)">'+flagImg(m.away,24,16,2)+' '+esc(tA?tA.name:m.away)+'</span></div>'
-          +scorers+bookings
-          +bonusBar+'</div>';
+          +'<span style="flex:1;display:flex;align-items:center;gap:7px;font:700 13px Archivo;color:var(--ink)">'+flagImg(m.away,24,16,2)+' '+esc(tA?tA.name:m.away)+'</span>'
+          +'<span style="font:700 11px Archivo;color:var(--muted);width:10px;text-align:center">'+(open?'\u25b4':'\u25be')+'</span></div>'
+          +bonusBar+detail+'</div>';
       }).join('');
       return '<div style="font:800 11px Archivo;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:15px 5px 8px">'+esc(fmtDate(date))+'</div>'
         +'<div style="display:flex;flex-direction:column;gap:8px">'+items+'</div>';
     }).join('');
     return '<div class="fadeup" style="padding:15px 11px 22px">'
-      +'<div style="font:800 12px Archivo;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0 5px 4px">Match Results</div>'+html+'</div>';
+      +'<div style="font:800 12px Archivo;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0 5px 11px">Match Results</div>'
+      +filter+html+'</div>';
   }
-
   function viewPrizes(){
     var fee=D.entryFee||0;
     var paid=D.players.filter(function(p){return p.paid;}), unpaid=D.players.filter(function(p){return !p.paid;}).map(function(p){return p.name;});
@@ -1871,6 +1881,7 @@ window.WC_DATA = {
     else if(act==='theme'){ state.theme=state.theme==='light'?'dark':'light'; try{localStorage.setItem('cc_theme',state.theme);}catch(e){} render(); }
     else if(act==='rules'){ state.showRules=!state.showRules; render(); }
     else if(act==='expand'){ var id=el.getAttribute('data-id'); state.expanded=state.expanded===id?null:id; render(); }
+    else if(act==='resx'){ var rk=el.getAttribute('data-k'); state.resExpanded[rk]=!state.resExpanded[rk]; render(); }
     else if(act==='sort'){ var k=el.getAttribute('data-key'); if(state.sortKey===k) state.sortDir*=-1; else { state.sortKey=k; state.sortDir=(k==='name'||k==='group'||k==='owner'||k==='rank')?1:-1; } render(); }
     else if(act==='photo'){ ev.stopPropagation(); state.lightbox=el.getAttribute('data-id'); render(); }
     else if(act==='closelb'){ state.lightbox=null; render(); }
@@ -1881,6 +1892,7 @@ window.WC_DATA = {
       var nl=d.live||[]; if(JSON.stringify(nl)!==JSON.stringify(LIVE)){ LIVE=nl; if(state.tab==='table') render(); }
     }).catch(function(){});
   }
+  screenEl.addEventListener('change', function(ev){ var el=ev.target; if(el&&el.getAttribute&&el.getAttribute('data-act')==='resdate'){ state.resultsDate=el.value; render(); } });
   render(); pollLive(); setInterval(pollLive, 45000); setInterval(tickCountdowns, 30000);
 })();
 </script>
