@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260621-161519';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260621-161800';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2237,13 +2237,16 @@ window.WC_DATA = {
     fetch(WORKER_URL,{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
       var nl=d.live||[], now=Date.now(), next;
       if(nl.length){ next=nl; lastLiveTs=now; }
-      else if(now-lastLiveTs<=150000){ next=LIVE; }
+      else if(now-lastLiveTs<=360000){ next=LIVE; }
       else { next=[]; }
       if(JSON.stringify(next)!==JSON.stringify(LIVE)){ LIVE=next; if(state.tab==='table') render(); }
     }).catch(function(){});
   }
   screenEl.addEventListener('change', function(ev){ var el=ev.target; if(el&&el.getAttribute&&el.getAttribute('data-act')==='resdate'){ state.resultsDate=el.value; render(); } });
-  render(); pollLive(); setInterval(pollLive, 45000); setInterval(tickCountdowns, 30000);
+  render(); pollLive(); setInterval(pollLive, 20000); setInterval(tickCountdowns, 30000);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) pollLive(); });
+  window.addEventListener('focus', pollLive);
+  window.addEventListener('pageshow', function(){ pollLive(); });
   setInterval(function(){var st=window.WCBURN;if(!st||!st.faces||st.faces.length<2)return;var flip=document.querySelector('.burnflip');if(!flip)return;var inr=flip.querySelector('.burninner');if(!inr)return;var nx=(st.idx+1)%st.faces.length;if(!st.back){inr.children[1].innerHTML=st.faces[nx];flip.classList.add('flipped');st.back=true;}else{inr.children[0].innerHTML=st.faces[nx];flip.classList.remove('flipped');st.back=false;}st.idx=nx;}, 7000);
 })();
 </script>
