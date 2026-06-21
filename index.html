@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260621-104931';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260621-105259';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1912,9 +1912,9 @@ window.WC_DATA = {
     var CARD='background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:12px;padding:10px 13px;';
     if(yWorst && yWorst.id!==bottom.id){
       var pt=' &middot; '+yPts+(Math.abs(yPts)===1?' pt':' pts');
-      var fa=inner(yWorst,'Worst yesterday',pt,pick(yWorst.id,['slag','club']),true);
-      var fb=inner(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),true);
-      return '<div data-act="burnflip" class="burnflip" style="perspective:900px;cursor:pointer;margin:0 5px 13px"><div class="burninner" style="display:grid;transition:transform .55s ease;transform-style:preserve-3d">'
+      var fa=inner(yWorst,'Worst yesterday',pt,pick(yWorst.id,['slag','club']),false);
+      var fb=inner(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),false);
+      return '<div class="burnflip" style="perspective:900px;margin:0 5px 13px"><div class="burninner" style="display:grid;transition:transform .55s ease;transform-style:preserve-3d">'
         +'<div style="grid-area:1/1;-webkit-backface-visibility:hidden;backface-visibility:hidden;'+CARD+'">'+fa+'</div>'
         +'<div style="grid-area:1/1;transform:rotateY(180deg);-webkit-backface-visibility:hidden;backface-visibility:hidden;'+CARD+'">'+fb+'</div>'
         +'</div></div>';
@@ -2229,7 +2229,6 @@ window.WC_DATA = {
   screenEl.addEventListener('click', function(ev){
     var el=ev.target.closest('[data-act]'); if(!el) return;
     var act=el.getAttribute('data-act');
-    if(act==='burnflip'){ el.classList.toggle('flipped'); return; }
     if(act==='tab'){ state.tab=el.getAttribute('data-tab'); state.expanded=null; render(); }
     else if(act==='lbmode'){ state.lbMode=el.getAttribute('data-mode'); state.expanded=null; render(); }
     else if(act==='theme'){ state.theme=state.theme==='light'?'dark':'light'; try{localStorage.setItem('cc_theme',state.theme);}catch(e){} render(); }
@@ -2253,6 +2252,7 @@ window.WC_DATA = {
   }
   screenEl.addEventListener('change', function(ev){ var el=ev.target; if(el&&el.getAttribute&&el.getAttribute('data-act')==='resdate'){ state.resultsDate=el.value; render(); } });
   render(); pollLive(); setInterval(pollLive, 45000); setInterval(tickCountdowns, 30000);
+  setInterval(function(){var f=document.querySelector('.burnflip');if(f)f.classList.toggle('flipped');}, 5000);
 })();
 </script>
 </body>
