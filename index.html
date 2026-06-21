@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260621-105259';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260621-105846';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2252,7 +2252,7 @@ window.WC_DATA = {
   }
   screenEl.addEventListener('change', function(ev){ var el=ev.target; if(el&&el.getAttribute&&el.getAttribute('data-act')==='resdate'){ state.resultsDate=el.value; render(); } });
   render(); pollLive(); setInterval(pollLive, 45000); setInterval(tickCountdowns, 30000);
-  setInterval(function(){var f=document.querySelector('.burnflip');if(f)f.classList.toggle('flipped');}, 5000);
+  setInterval(function(){var f=document.querySelector('.burnflip');if(f)f.classList.toggle('flipped');}, 10000);
 })();
 </script>
 </body>
