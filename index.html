@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260621-104323';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260621-104931';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +38,7 @@
   .tap{cursor:pointer}
   .tap:hover{transform:translateY(-1px)}
   @keyframes lpulse{0%,100%{opacity:1}50%{opacity:.2}} .livedot{animation:lpulse 1.2s ease-in-out infinite}
+  .burnflip.flipped .burninner{transform:rotateY(180deg)}
 </style>
 </head>
 <body>
@@ -1907,17 +1908,22 @@ window.WC_DATA = {
       if(arr.length){ yWorst=arr[0].p; yPts=arr[0].pts; }
     }
     function pick(pid,tags){var pool=[];tags.forEach(function(t){var L=(BANTER[pid]||{})[t];if(L)for(var i=0;i<L.length;i++)pool.push(L[i]);});if(!pool.length){var L2=(BANTER[pid]||{}).slag;if(L2)pool=L2;}return pool.length?pool[Math.floor(Date.now()/3600000)%pool.length]:'';}
-    function row(pl,label,ptsTxt,line,div){var ph=photoSrc(pl);return '<div style="display:flex;gap:10px;align-items:flex-start;'+(div?'margin-top:9px;padding-top:9px;border-top:1px solid var(--card-soft-border);':'')+'">'+(ph?'<img src="'+ph+'" alt="" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;border:1.5px solid var(--card-border)">':'')+'<div style="min-width:0"><div style="font:800 9px Archivo;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:2px">'+label+' &middot; '+esc(pl.name)+ptsTxt+'</div><div style="font:600 12px/1.45 Archivo;color:var(--ink)">'+esc(line)+'</div></div></div>';}
-    var rows=[];
-    if(yWorst){
+    function inner(pl,label,ptsTxt,line,hint){var ph=photoSrc(pl);return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font:800 9px Archivo;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)">Today&#39;s burn 🔥</span>'+(hint?'<span style="font:700 8.5px Archivo;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">tap to flip ↻</span>':'')+'</div><div style="display:flex;gap:10px;align-items:flex-start">'+(ph?'<img src="'+ph+'" alt="" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;border:1.5px solid var(--card-border)">':'')+'<div style="min-width:0"><div style="font:800 9px Archivo;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:2px">'+label+' &middot; '+esc(pl.name)+ptsTxt+'</div><div style="font:600 12px/1.45 Archivo;color:var(--ink)">'+esc(line)+'</div></div></div>';}
+    var CARD='background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:12px;padding:10px 13px;';
+    if(yWorst && yWorst.id!==bottom.id){
       var pt=' &middot; '+yPts+(Math.abs(yPts)===1?' pt':' pts');
-      if(yWorst.id===bottom.id){ rows.push(row(yWorst,'Worst yesterday &amp; bottom',pt,pick(yWorst.id,['spoon','slag']),false)); }
-      else { rows.push(row(yWorst,'Worst yesterday',pt,pick(yWorst.id,['slag','club']),false)); rows.push(row(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),true)); }
-    } else { rows.push(row(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),false)); }
-    if(!rows.length||!rows[0]) return '';
-    return '<div style="background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:12px;padding:10px 13px;margin:0 5px 13px">'
-      +'<div style="font:800 9px Archivo;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Today&#39;s burn 🔥</div>'
-      +rows.join('')+'</div>';
+      var fa=inner(yWorst,'Worst yesterday',pt,pick(yWorst.id,['slag','club']),true);
+      var fb=inner(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),true);
+      return '<div data-act="burnflip" class="burnflip" style="perspective:900px;cursor:pointer;margin:0 5px 13px"><div class="burninner" style="display:grid;transition:transform .55s ease;transform-style:preserve-3d">'
+        +'<div style="grid-area:1/1;-webkit-backface-visibility:hidden;backface-visibility:hidden;'+CARD+'">'+fa+'</div>'
+        +'<div style="grid-area:1/1;transform:rotateY(180deg);-webkit-backface-visibility:hidden;backface-visibility:hidden;'+CARD+'">'+fb+'</div>'
+        +'</div></div>';
+    }
+    var tp,tlabel,tpts;
+    if(yWorst){ tp=yWorst; tlabel='Worst yesterday &amp; bottom'; tpts=' &middot; '+yPts+(Math.abs(yPts)===1?' pt':' pts'); }
+    else { tp=bottom; tlabel='Bottom of the table'; tpts=''; }
+    var ln=pick(tp.id,['spoon','slag']); if(!ln) return '';
+    return '<div style="'+CARD+'margin:0 5px 13px">'+inner(tp,tlabel,tpts,ln,false)+'</div>';
   }
 
   function liveCardHtml(){
@@ -2223,6 +2229,7 @@ window.WC_DATA = {
   screenEl.addEventListener('click', function(ev){
     var el=ev.target.closest('[data-act]'); if(!el) return;
     var act=el.getAttribute('data-act');
+    if(act==='burnflip'){ el.classList.toggle('flipped'); return; }
     if(act==='tab'){ state.tab=el.getAttribute('data-tab'); state.expanded=null; render(); }
     else if(act==='lbmode'){ state.lbMode=el.getAttribute('data-mode'); state.expanded=null; render(); }
     else if(act==='theme'){ state.theme=state.theme==='light'?'dark':'light'; try{localStorage.setItem('cc_theme',state.theme);}catch(e){} render(); }
