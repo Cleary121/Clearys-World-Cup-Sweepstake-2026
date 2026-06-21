@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260621-063026';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260621-102900';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1803,7 +1803,7 @@ window.WC_DATA = {
 
   var _savedTheme='light'; try{ _savedTheme=localStorage.getItem('cc_theme')||'light'; }catch(e){}
   var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{}, todayExpanded:false };
-  var LIVE=[];
+  var LIVE=[]; var lastLiveTs=0;
   var WORKER_URL='https://wc-live.davidgcleary.workers.dev/';
   var screenEl = document.getElementById('screen');
 
@@ -2222,8 +2222,12 @@ window.WC_DATA = {
   });
 
   function pollLive(){
-    fetch(WORKER_URL).then(function(r){return r.json();}).then(function(d){
-      var nl=d.live||[]; if(JSON.stringify(nl)!==JSON.stringify(LIVE)){ LIVE=nl; if(state.tab==='table') render(); }
+    fetch(WORKER_URL,{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      var nl=d.live||[], now=Date.now(), next;
+      if(nl.length){ next=nl; lastLiveTs=now; }
+      else if(now-lastLiveTs<=150000){ next=LIVE; }
+      else { next=[]; }
+      if(JSON.stringify(next)!==JSON.stringify(LIVE)){ LIVE=next; if(state.tab==='table') render(); }
     }).catch(function(){});
   }
   screenEl.addEventListener('change', function(ev){ var el=ev.target; if(el&&el.getAttribute&&el.getAttribute('data-act')==='resdate'){ state.resultsDate=el.value; render(); } });
