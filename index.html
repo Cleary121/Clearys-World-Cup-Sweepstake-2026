@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260622-104427';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260622-104533';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2449,9 +2449,9 @@ function viewBracket(){
     else if(state.tab==='bracket') body=viewBracket();
     else body=viewPrizes();
 
-    var tabs=[['table','TABLE'],['teams','TEAMS'],['results','RESULTS'],['bracket','BRACKET'],['prizes','PRIZES']].map(function(t){
+    var tabs=[['table','TABLE'],['teams','TEAMS'],['results','RESULTS'],['bracket','KNOCKOUT'],['prizes','PRIZES']].map(function(t){
       var active=state.tab===t[0];
-      return '<button data-act="tab" data-tab="'+t[0]+'" style="background:none;border:none;cursor:pointer;font:800 10px Archivo;letter-spacing:.06em;color:'+(active?'var(--tab-active)':'var(--tab-ink)')+';padding:4px 7px">'+t[1]+'</button>';
+      return '<button data-act="tab" data-tab="'+t[0]+'" style="background:none;border:none;cursor:pointer;font:800 10px Archivo;letter-spacing:.06em;color:'+(active?'var(--tab-active)':'var(--tab-ink)')+';padding:4px 5px;letter-spacing:.02em">'+t[1]+'</button>';
     }).join('');
 
     var header='<div style="flex:none;margin:9px 9px 0;background:var(--header-bg);border-radius:24px;padding:12px 18px 17px;position:relative;overflow:hidden">'
