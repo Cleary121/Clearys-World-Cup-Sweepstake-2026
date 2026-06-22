@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260622-111618';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260622-151445';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,7 @@
   .brblk{display:flex;align-items:center;margin:0 0 16px}
   .brfeed{display:flex;flex-direction:column;gap:18px;flex:none}
   .brconn{width:26px;align-self:stretch;position:relative;flex:none}
-  .brconn::before{content:"";position:absolute;left:0;top:36px;bottom:36px;width:13px;border:2px solid var(--card-border);border-left:0;border-radius:0 9px 9px 0}
+  .brconn::before{content:"";position:absolute;left:0;top:40px;bottom:40px;width:13px;border:2px solid var(--card-border);border-left:0;border-radius:0 9px 9px 0}
   .brconn::after{content:"";position:absolute;left:13px;right:0;top:50%;border-top:2px solid var(--card-border)}
 </style>
 </head>
@@ -2437,7 +2437,7 @@ function viewBracket(){
     return '<div style="display:flex;align-items:center;gap:6px;padding:4px 9px;min-width:0">'+flagC(code)
       +'<span style="font:800 12px Archivo;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(nm)+'</span>'
       +'<span style="font:800 8px Archivo;color:var(--accent);flex:none">'+badge+'</span>'
-      +(ph?'<img src="'+ph+'" alt="" style="width:15px;height:15px;border-radius:50%;object-fit:cover;margin-left:auto;flex:none;border:1px solid var(--card-border)">':'')+'</div>';}
+      +(ph?'<img src="'+ph+'" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover;margin-left:auto;flex:none;border:1px solid var(--card-border)">':'')+'</div>';}
   function prow(txt){return '<div style="display:flex;align-items:center;padding:4px 9px;min-height:25px"><span style="font:700 10px Archivo;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(txt)+'</span></div>';}
   function slotRow(spec){var ty=spec[0],g=spec[1],code,badge,codeLabel,conf;
     if(ty==='W'){code=M.winner[g];badge='1'+g;codeLabel='1'+g;conf=M.gdone[g];}
@@ -2453,7 +2453,7 @@ function viewBracket(){
   function card(rk,n,w){var s=KSCHED[String(n)]||{},rows=matchRows(rk,n),cf=matchConf(rk,n);
     var tag=rk==='R32'?('<div style="font:800 7px Archivo;letter-spacing:.07em;text-transform:uppercase;color:'+(cf?'var(--green)':'var(--muted)')+';margin:0 0 2px 4px">'+(cf?'Confirmed':'As it stands')+'</div>'):'<div style="font:800 7px Archivo;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 2px 4px">Match '+n+'</div>';
     var dt=s.lbl?'<div style="width:72px;flex:none;border-left:1px solid var(--card-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 4px"><span style="font:700 8.5px Archivo;color:var(--muted);text-align:center;line-height:1.1">'+s.lbl+'</span><span style="font:800 12px Archivo;color:var(--ink)">'+s.t+'</span></div>':'';
-    return '<div style="width:'+w+'px;height:72px;flex:none">'+tag+'<div style="background:var(--card);border:1px solid '+(cf?'var(--accent)':'var(--card-border)')+';border-radius:11px;box-shadow:1px 2px 0 var(--shadow);display:flex;align-items:stretch;overflow:hidden;height:58px"><div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0">'+rows[0]+'<div style="height:1px;background:var(--card-border);margin:0 8px"></div>'+rows[1]+'</div>'+dt+'</div></div>';
+    return '<div style="width:'+w+'px;height:80px;flex:none">'+tag+'<div style="background:var(--card);border:1px solid '+(cf?'var(--accent)':'var(--card-border)')+';border-radius:11px;box-shadow:1px 2px 0 var(--shadow);display:flex;align-items:stretch;overflow:hidden;height:66px"><div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0">'+rows[0]+'<div style="height:1px;background:var(--card-border);margin:0 8px"></div>'+rows[1]+'</div>'+dt+'</div></div>';
   }
   var SIDE={89:'T',90:'T',93:'T',94:'T',91:'B',92:'B',95:'B',96:'B',97:'T',98:'T',99:'B',100:'B',101:'T',102:'B'};
   function hdr(t){return '<div style="font:800 9.5px Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:8px 2px 11px">'+t+'</div>';}
