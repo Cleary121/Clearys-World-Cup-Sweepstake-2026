@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260622-110423';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260622-111618';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2455,14 +2455,18 @@ function viewBracket(){
     var dt=s.lbl?'<div style="width:72px;flex:none;border-left:1px solid var(--card-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 4px"><span style="font:700 8.5px Archivo;color:var(--muted);text-align:center;line-height:1.1">'+s.lbl+'</span><span style="font:800 12px Archivo;color:var(--ink)">'+s.t+'</span></div>':'';
     return '<div style="width:'+w+'px;height:72px;flex:none">'+tag+'<div style="background:var(--card);border:1px solid '+(cf?'var(--accent)':'var(--card-border)')+';border-radius:11px;box-shadow:1px 2px 0 var(--shadow);display:flex;align-items:stretch;overflow:hidden;height:58px"><div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0">'+rows[0]+'<div style="height:1px;background:var(--card-border);margin:0 8px"></div>'+rows[1]+'</div>'+dt+'</div></div>';
   }
+  var SIDE={89:'T',90:'T',93:'T',94:'T',91:'B',92:'B',95:'B',96:'B',97:'T',98:'T',99:'B',100:'B',101:'T',102:'B'};
+  function hdr(t){return '<div style="font:800 9.5px Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:8px 2px 11px">'+t+'</div>';}
   var body;
   if(round==='F'){
-    body='<div style="display:flex;justify-content:center;padding-top:8px">'+card('F',104,250)+'</div>';
+    body='<div style="padding:2px 4px 8px">'+hdr('Final')+'<div style="display:flex;justify-content:flex-start">'+card('F',104,250)+'</div></div>';
   } else {
     var rdef=RNDS.find(function(r){return r.k===round;});
-    var blocks=rdef.flow.map(function(e){
-      return '<div class="brblk"><div class="brfeed">'+card(round,e.a,228)+card(round,e.b,228)+'</div><div class="brconn"></div>'+card(RNDS[RNDS.indexOf(rdef)+1].k,e.n,176)+'</div>';
-    }).join('');
+    var nk=RNDS[RNDS.indexOf(rdef)+1].k;
+    function blk(e){return '<div class="brblk"><div class="brfeed">'+card(round,e.a,228)+card(round,e.b,228)+'</div><div class="brconn"></div>'+card(nk,e.n,176)+'</div>';}
+    var blocks='';
+    if(round==='SF'){ blocks=hdr('Final')+rdef.flow.map(blk).join(''); }
+    else { [['T','Top half'],['B','Bottom half']].forEach(function(g){ var es=rdef.flow.filter(function(e){return SIDE[e.n]===g[0];}); if(es.length) blocks+=hdr(g[1])+es.map(blk).join(''); }); }
     body='<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 4px 8px"><div style="display:inline-block;min-width:max-content">'+blocks+'</div></div>';
   }
   var chips=RNDS.map(function(r){var on=r.k===round;
