@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260622-104533';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260622-110423';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,6 +39,11 @@
   .tap:hover{transform:translateY(-1px)}
   @keyframes lpulse{0%,100%{opacity:1}50%{opacity:.2}} .livedot{animation:lpulse 1.2s ease-in-out infinite}
   .burnflip.flipped .burninner{transform:rotateY(180deg)}
+  .brblk{display:flex;align-items:center;margin:0 0 16px}
+  .brfeed{display:flex;flex-direction:column;gap:18px;flex:none}
+  .brconn{width:26px;align-self:stretch;position:relative;flex:none}
+  .brconn::before{content:"";position:absolute;left:0;top:36px;bottom:36px;width:13px;border:2px solid var(--card-border);border-left:0;border-radius:0 9px 9px 0}
+  .brconn::after{content:"";position:absolute;left:13px;right:0;top:50%;border-top:2px solid var(--card-border)}
 </style>
 </head>
 <body>
@@ -2002,7 +2007,7 @@ window.WC_DATA = {
   };;;
 
   var _savedTheme='light'; try{ _savedTheme=localStorage.getItem('cc_theme')||'light'; }catch(e){}
-  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{}, todayExpanded:false };
+  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{}, todayExpanded:false, brRound:'R32', brMode:'asis' };
   var LIVE=[]; var lastLiveTs=0;
   var WORKER_URL='https://wc-live.davidgcleary.workers.dev/';
   var screenEl = document.getElementById('screen');
@@ -2378,7 +2383,9 @@ window.WC_DATA = {
 
   /* ---------- shell ---------- */
   var T3={"EFGHIJKL":"EJIFHGLK","DFGHIJKL":"HGIDJFLK","DEGHIJKL":"EJIDHGLK","DEFHIJKL":"EJIDHFLK","DEFGIJKL":"EGIDJFLK","DEFGHJKL":"EGJDHFLK","DEFGHIKL":"EGIDHFLK","DEFGHIJL":"EGJDHFLI","DEFGHIJK":"EGJDHFIK","CFGHIJKL":"HGICJFLK","CEGHIJKL":"EJICHGLK","CEFHIJKL":"EJICHFLK","CEFGIJKL":"EGICJFLK","CEFGHJKL":"EGJCHFLK","CEFGHIKL":"EGICHFLK","CEFGHIJL":"EGJCHFLI","CEFGHIJK":"EGJCHFIK","CDGHIJKL":"HGICJDLK","CDFHIJKL":"CJIDHFLK","CDFGIJKL":"CGIDJFLK","CDFGHJKL":"CGJDHFLK","CDFGHIKL":"CGIDHFLK","CDFGHIJL":"CGJDHFLI","CDFGHIJK":"CGJDHFIK","CDEHIJKL":"EJICHDLK","CDEGIJKL":"EGICJDLK","CDEGHJKL":"EGJCHDLK","CDEGHIKL":"EGICHDLK","CDEGHIJL":"EGJCHDLI","CDEGHIJK":"EGJCHDIK","CDEFIJKL":"CJEDIFLK","CDEFHJKL":"CJEDHFLK","CDEFHIKL":"CEIDHFLK","CDEFHIJL":"CJEDHFLI","CDEFHIJK":"CJEDHFIK","CDEFGJKL":"CGEDJFLK","CDEFGIKL":"CGEDIFLK","CDEFGIJL":"CGEDJFLI","CDEFGIJK":"CGEDJFIK","CDEFGHKL":"CGEDHFLK","CDEFGHJL":"CGJDHFLE","CDEFGHJK":"CGJDHFEK","CDEFGHIL":"CGEDHFLI","CDEFGHIK":"CGEDHFIK","CDEFGHIJ":"CGJDHFEI","BFGHIJKL":"HJBFIGLK","BEGHIJKL":"EJIBHGLK","BEFHIJKL":"EJBFIHLK","BEFGIJKL":"EJBFIGLK","BEFGHJKL":"EJBFHGLK","BEFGHIKL":"EGBFIHLK","BEFGHIJL":"EJBFHGLI","BEFGHIJK":"EJBFHGIK","BDGHIJKL":"HJBDIGLK","BDFHIJKL":"HJBDIFLK","BDFGIJKL":"IGBDJFLK","BDFGHJKL":"HGBDJFLK","BDFGHIKL":"HGBDIFLK","BDFGHIJL":"HGBDJFLI","BDFGHIJK":"HGBDJFIK","BDEHIJKL":"EJBDIHLK","BDEGIJKL":"EJBDIGLK","BDEGHJKL":"EJBDHGLK","BDEGHIKL":"EGBDIHLK","BDEGHIJL":"EJBDHGLI","BDEGHIJK":"EJBDHGIK","BDEFIJKL":"EJBDIFLK","BDEFHJKL":"EJBDHFLK","BDEFHIKL":"EIBDHFLK","BDEFHIJL":"EJBDHFLI","BDEFHIJK":"EJBDHFIK","BDEFGJKL":"EGBDJFLK","BDEFGIKL":"EGBDIFLK","BDEFGIJL":"EGBDJFLI","BDEFGIJK":"EGBDJFIK","BDEFGHKL":"EGBDHFLK","BDEFGHJL":"HGBDJFLE","BDEFGHJK":"HGBDJFEK","BDEFGHIL":"EGBDHFLI","BDEFGHIK":"EGBDHFIK","BDEFGHIJ":"HGBDJFEI","BCGHIJKL":"HJBCIGLK","BCFHIJKL":"HJBCIFLK","BCFGIJKL":"IGBCJFLK","BCFGHJKL":"HGBCJFLK","BCFGHIKL":"HGBCIFLK","BCFGHIJL":"HGBCJFLI","BCFGHIJK":"HGBCJFIK","BCEHIJKL":"EJBCIHLK","BCEGIJKL":"EJBCIGLK","BCEGHJKL":"EJBCHGLK","BCEGHIKL":"EGBCIHLK","BCEGHIJL":"EJBCHGLI","BCEGHIJK":"EJBCHGIK","BCEFIJKL":"EJBCIFLK","BCEFHJKL":"EJBCHFLK","BCEFHIKL":"EIBCHFLK","BCEFHIJL":"EJBCHFLI","BCEFHIJK":"EJBCHFIK","BCEFGJKL":"EGBCJFLK","BCEFGIKL":"EGBCIFLK","BCEFGIJL":"EGBCJFLI","BCEFGIJK":"EGBCJFIK","BCEFGHKL":"EGBCHFLK","BCEFGHJL":"HGBCJFLE","BCEFGHJK":"HGBCJFEK","BCEFGHIL":"EGBCHFLI","BCEFGHIK":"EGBCHFIK","BCEFGHIJ":"HGBCJFEI","BCDHIJKL":"HJBCIDLK","BCDGIJKL":"IGBCJDLK","BCDGHJKL":"HGBCJDLK","BCDGHIKL":"HGBCIDLK","BCDGHIJL":"HGBCJDLI","BCDGHIJK":"HGBCJDIK","BCDFIJKL":"CJBDIFLK","BCDFHJKL":"CJBDHFLK","BCDFHIKL":"CIBDHFLK","BCDFHIJL":"CJBDHFLI","BCDFHIJK":"CJBDHFIK","BCDFGJKL":"CGBDJFLK","BCDFGIKL":"CGBDIFLK","BCDFGIJL":"CGBDJFLI","BCDFGIJK":"CGBDJFIK","BCDFGHKL":"CGBDHFLK","BCDFGHJL":"CGBDHFLJ","BCDFGHJK":"HGBCJFDK","BCDFGHIL":"CGBDHFLI","BCDFGHIK":"CGBDHFIK","BCDFGHIJ":"HGBCJFDI","BCDEIJKL":"EJBCIDLK","BCDEHJKL":"EJBCHDLK","BCDEHIKL":"EIBCHDLK","BCDEHIJL":"EJBCHDLI","BCDEHIJK":"EJBCHDIK","BCDEGJKL":"EGBCJDLK","BCDEGIKL":"EGBCIDLK","BCDEGIJL":"EGBCJDLI","BCDEGIJK":"EGBCJDIK","BCDEGHKL":"EGBCHDLK","BCDEGHJL":"HGBCJDLE","BCDEGHJK":"HGBCJDEK","BCDEGHIL":"EGBCHDLI","BCDEGHIK":"EGBCHDIK","BCDEGHIJ":"HGBCJDEI","BCDEFJKL":"CJBDEFLK","BCDEFIKL":"CEBDIFLK","BCDEFIJL":"CJBDEFLI","BCDEFIJK":"CJBDEFIK","BCDEFHKL":"CEBDHFLK","BCDEFHJL":"CJBDHFLE","BCDEFHJK":"CJBDHFEK","BCDEFHIL":"CEBDHFLI","BCDEFHIK":"CEBDHFIK","BCDEFHIJ":"CJBDHFEI","BCDEFGKL":"CGBDEFLK","BCDEFGJL":"CGBDJFLE","BCDEFGJK":"CGBDJFEK","BCDEFGIL":"CGBDEFLI","BCDEFGIK":"CGBDEFIK","BCDEFGIJ":"CGBDJFEI","BCDEFGHL":"CGBDHFLE","BCDEFGHK":"CGBDHFEK","BCDEFGHJ":"HGBCJFDE","BCDEFGHI":"CGBDHFEI","AFGHIJKL":"HJIFAGLK","AEGHIJKL":"EJIAHGLK","AEFHIJKL":"EJIFAHLK","AEFGIJKL":"EJIFAGLK","AEFGHJKL":"EGJFAHLK","AEFGHIKL":"EGIFAHLK","AEFGHIJL":"EGJFAHLI","AEFGHIJK":"EGJFAHIK","ADGHIJKL":"HJIDAGLK","ADFHIJKL":"HJIDAFLK","ADFGIJKL":"IGJDAFLK","ADFGHJKL":"HGJDAFLK","ADFGHIKL":"HGIDAFLK","ADFGHIJL":"HGJDAFLI","ADFGHIJK":"HGJDAFIK","ADEHIJKL":"EJIDAHLK","ADEGIJKL":"EJIDAGLK","ADEGHJKL":"EGJDAHLK","ADEGHIKL":"EGIDAHLK","ADEGHIJL":"EGJDAHLI","ADEGHIJK":"EGJDAHIK","ADEFIJKL":"EJIDAFLK","ADEFHJKL":"HJEDAFLK","ADEFHIKL":"HEIDAFLK","ADEFHIJL":"HJEDAFLI","ADEFHIJK":"HJEDAFIK","ADEFGJKL":"EGJDAFLK","ADEFGIKL":"EGIDAFLK","ADEFGIJL":"EGJDAFLI","ADEFGIJK":"EGJDAFIK","ADEFGHKL":"HGEDAFLK","ADEFGHJL":"HGJDAFLE","ADEFGHJK":"HGJDAFEK","ADEFGHIL":"HGEDAFLI","ADEFGHIK":"HGEDAFIK","ADEFGHIJ":"HGJDAFEI","ACGHIJKL":"HJICAGLK","ACFHIJKL":"HJICAFLK","ACFGIJKL":"IGJCAFLK","ACFGHJKL":"HGJCAFLK","ACFGHIKL":"HGICAFLK","ACFGHIJL":"HGJCAFLI","ACFGHIJK":"HGJCAFIK","ACEHIJKL":"EJICAHLK","ACEGIJKL":"EJICAGLK","ACEGHJKL":"EGJCAHLK","ACEGHIKL":"EGICAHLK","ACEGHIJL":"EGJCAHLI","ACEGHIJK":"EGJCAHIK","ACEFIJKL":"EJICAFLK","ACEFHJKL":"HJECAFLK","ACEFHIKL":"HEICAFLK","ACEFHIJL":"HJECAFLI","ACEFHIJK":"HJECAFIK","ACEFGJKL":"EGJCAFLK","ACEFGIKL":"EGICAFLK","ACEFGIJL":"EGJCAFLI","ACEFGIJK":"EGJCAFIK","ACEFGHKL":"HGECAFLK","ACEFGHJL":"HGJCAFLE","ACEFGHJK":"HGJCAFEK","ACEFGHIL":"HGECAFLI","ACEFGHIK":"HGECAFIK","ACEFGHIJ":"HGJCAFEI","ACDHIJKL":"HJICADLK","ACDGIJKL":"IGJCADLK","ACDGHJKL":"HGJCADLK","ACDGHIKL":"HGICADLK","ACDGHIJL":"HGJCADLI","ACDGHIJK":"HGJCADIK","ACDFIJKL":"CJIDAFLK","ACDFHJKL":"HJFCADLK","ACDFHIKL":"HFICADLK","ACDFHIJL":"HJFCADLI","ACDFHIJK":"HJFCADIK","ACDFGJKL":"CGJDAFLK","ACDFGIKL":"CGIDAFLK","ACDFGIJL":"CGJDAFLI","ACDFGIJK":"CGJDAFIK","ACDFGHKL":"HGFCADLK","ACDFGHJL":"CGJDAFLH","ACDFGHJK":"HGJCAFDK","ACDFGHIL":"HGFCADLI","ACDFGHIK":"HGFCADIK","ACDFGHIJ":"HGJCAFDI","ACDEIJKL":"EJICADLK","ACDEHJKL":"HJECADLK","ACDEHIKL":"HEICADLK","ACDEHIJL":"HJECADLI","ACDEHIJK":"HJECADIK","ACDEGJKL":"EGJCADLK","ACDEGIKL":"EGICADLK","ACDEGIJL":"EGJCADLI","ACDEGIJK":"EGJCADIK","ACDEGHKL":"HGECADLK","ACDEGHJL":"HGJCADLE","ACDEGHJK":"HGJCADEK","ACDEGHIL":"HGECADLI","ACDEGHIK":"HGECADIK","ACDEGHIJ":"HGJCADEI","ACDEFJKL":"CJEDAFLK","ACDEFIKL":"CEIDAFLK","ACDEFIJL":"CJEDAFLI","ACDEFIJK":"CJEDAFIK","ACDEFHKL":"HEFCADLK","ACDEFHJL":"HJFCADLE","ACDEFHJK":"HJECAFDK","ACDEFHIL":"HEFCADLI","ACDEFHIK":"HEFCADIK","ACDEFHIJ":"HJECAFDI","ACDEFGKL":"CGEDAFLK","ACDEFGJL":"CGJDAFLE","ACDEFGJK":"CGJDAFEK","ACDEFGIL":"CGEDAFLI","ACDEFGIK":"CGEDAFIK","ACDEFGIJ":"CGJDAFEI","ACDEFGHL":"HGFCADLE","ACDEFGHK":"HGECAFDK","ACDEFGHJ":"HGJCAFDE","ACDEFGHI":"HGECAFDI","ABGHIJKL":"HJBAIGLK","ABFHIJKL":"HJBAIFLK","ABFGIJKL":"IJBFAGLK","ABFGHJKL":"HJBFAGLK","ABFGHIKL":"HGBAIFLK","ABFGHIJL":"HJBFAGLI","ABFGHIJK":"HJBFAGIK","ABEHIJKL":"EJBAIHLK","ABEGIJKL":"EJBAIGLK","ABEGHJKL":"EJBAHGLK","ABEGHIKL":"EGBAIHLK","ABEGHIJL":"EJBAHGLI","ABEGHIJK":"EJBAHGIK","ABEFIJKL":"EJBAIFLK","ABEFHJKL":"EJBFAHLK","ABEFHIKL":"EIBFAHLK","ABEFHIJL":"EJBFAHLI","ABEFHIJK":"EJBFAHIK","ABEFGJKL":"EJBFAGLK","ABEFGIKL":"EGBAIFLK","ABEFGIJL":"EJBFAGLI","ABEFGIJK":"EJBFAGIK","ABEFGHKL":"EGBFAHLK","ABEFGHJL":"HJBFAGLE","ABEFGHJK":"HJBFAGEK","ABEFGHIL":"EGBFAHLI","ABEFGHIK":"EGBFAHIK","ABEFGHIJ":"HJBFAGEI","ABDHIJKL":"IJBDAHLK","ABDGIJKL":"IJBDAGLK","ABDGHJKL":"HJBDAGLK","ABDGHIKL":"IGBDAHLK","ABDGHIJL":"HJBDAGLI","ABDGHIJK":"HJBDAGIK","ABDFIJKL":"IJBDAFLK","ABDFHJKL":"HJBDAFLK","ABDFHIKL":"HIBDAFLK","ABDFHIJL":"HJBDAFLI","ABDFHIJK":"HJBDAFIK","ABDFGJKL":"FJBDAGLK","ABDFGIKL":"IGBDAFLK","ABDFGIJL":"FJBDAGLI","ABDFGIJK":"FJBDAGIK","ABDFGHKL":"HGBDAFLK","ABDFGHJL":"HGBDAFLJ","ABDFGHJK":"HGBDAFJK","ABDFGHIL":"HGBDAFLI","ABDFGHIK":"HGBDAFIK","ABDFGHIJ":"HGBDAFIJ","ABDEIJKL":"EJBAIDLK","ABDEHJKL":"EJBDAHLK","ABDEHIKL":"EIBDAHLK","ABDEHIJL":"EJBDAHLI","ABDEHIJK":"EJBDAHIK","ABDEGJKL":"EJBDAGLK","ABDEGIKL":"EGBAIDLK","ABDEGIJL":"EJBDAGLI","ABDEGIJK":"EJBDAGIK","ABDEGHKL":"EGBDAHLK","ABDEGHJL":"HJBDAGLE","ABDEGHJK":"HJBDAGEK","ABDEGHIL":"EGBDAHLI","ABDEGHIK":"EGBDAHIK","ABDEGHIJ":"HJBDAGEI","ABDEFJKL":"EJBDAFLK","ABDEFIKL":"EIBDAFLK","ABDEFIJL":"EJBDAFLI","ABDEFIJK":"EJBDAFIK","ABDEFHKL":"HEBDAFLK","ABDEFHJL":"HJBDAFLE","ABDEFHJK":"HJBDAFEK","ABDEFHIL":"HEBDAFLI","ABDEFHIK":"HEBDAFIK","ABDEFHIJ":"HJBDAFEI","ABDEFGKL":"EGBDAFLK","ABDEFGJL":"EGBDAFLJ","ABDEFGJK":"EGBDAFJK","ABDEFGIL":"EGBDAFLI","ABDEFGIK":"EGBDAFIK","ABDEFGIJ":"EGBDAFIJ","ABDEFGHL":"HGBDAFLE","ABDEFGHK":"HGBDAFEK","ABDEFGHJ":"HGBDAFEJ","ABDEFGHI":"HGBDAFEI","ABCHIJKL":"IJBCAHLK","ABCGIJKL":"IJBCAGLK","ABCGHJKL":"HJBCAGLK","ABCGHIKL":"IGBCAHLK","ABCGHIJL":"HJBCAGLI","ABCGHIJK":"HJBCAGIK","ABCFIJKL":"IJBCAFLK","ABCFHJKL":"HJBCAFLK","ABCFHIKL":"HIBCAFLK","ABCFHIJL":"HJBCAFLI","ABCFHIJK":"HJBCAFIK","ABCFGJKL":"CJBFAGLK","ABCFGIKL":"IGBCAFLK","ABCFGIJL":"CJBFAGLI","ABCFGIJK":"CJBFAGIK","ABCFGHKL":"HGBCAFLK","ABCFGHJL":"HGBCAFLJ","ABCFGHJK":"HGBCAFJK","ABCFGHIL":"HGBCAFLI","ABCFGHIK":"HGBCAFIK","ABCFGHIJ":"HGBCAFIJ","ABCEIJKL":"EJBAICLK","ABCEHJKL":"EJBCAHLK","ABCEHIKL":"EIBCAHLK","ABCEHIJL":"EJBCAHLI","ABCEHIJK":"EJBCAHIK","ABCEGJKL":"EJBCAGLK","ABCEGIKL":"EGBAICLK","ABCEGIJL":"EJBCAGLI","ABCEGIJK":"EJBCAGIK","ABCEGHKL":"EGBCAHLK","ABCEGHJL":"HJBCAGLE","ABCEGHJK":"HJBCAGEK","ABCEGHIL":"EGBCAHLI","ABCEGHIK":"EGBCAHIK","ABCEGHIJ":"HJBCAGEI","ABCEFJKL":"EJBCAFLK","ABCEFIKL":"EIBCAFLK","ABCEFIJL":"EJBCAFLI","ABCEFIJK":"EJBCAFIK","ABCEFHKL":"HEBCAFLK","ABCEFHJL":"HJBCAFLE","ABCEFHJK":"HJBCAFEK","ABCEFHIL":"HEBCAFLI","ABCEFHIK":"HEBCAFIK","ABCEFHIJ":"HJBCAFEI","ABCEFGKL":"EGBCAFLK","ABCEFGJL":"EGBCAFLJ","ABCEFGJK":"EGBCAFJK","ABCEFGIL":"EGBCAFLI","ABCEFGIK":"EGBCAFIK","ABCEFGIJ":"EGBCAFIJ","ABCEFGHL":"HGBCAFLE","ABCEFGHK":"HGBCAFEK","ABCEFGHJ":"HGBCAFEJ","ABCEFGHI":"HGBCAFEI","ABCDIJKL":"IJBCADLK","ABCDHJKL":"HJBCADLK","ABCDHIKL":"HIBCADLK","ABCDHIJL":"HJBCADLI","ABCDHIJK":"HJBCADIK","ABCDGJKL":"CJBDAGLK","ABCDGIKL":"IGBCADLK","ABCDGIJL":"CJBDAGLI","ABCDGIJK":"CJBDAGIK","ABCDGHKL":"HGBCADLK","ABCDGHJL":"HGBCADLJ","ABCDGHJK":"HGBCADJK","ABCDGHIL":"HGBCADLI","ABCDGHIK":"HGBCADIK","ABCDGHIJ":"HGBCADIJ","ABCDFJKL":"CJBDAFLK","ABCDFIKL":"CIBDAFLK","ABCDFIJL":"CJBDAFLI","ABCDFIJK":"CJBDAFIK","ABCDFHKL":"HFBCADLK","ABCDFHJL":"CJBDAFLH","ABCDFHJK":"HJBCAFDK","ABCDFHIL":"HFBCADLI","ABCDFHIK":"HFBCADIK","ABCDFHIJ":"HJBCAFDI","ABCDFGKL":"CGBDAFLK","ABCDFGJL":"CGBDAFLJ","ABCDFGJK":"CGBDAFJK","ABCDFGIL":"CGBDAFLI","ABCDFGIK":"CGBDAFIK","ABCDFGIJ":"CGBDAFIJ","ABCDFGHL":"CGBDAFLH","ABCDFGHK":"HGBCAFDK","ABCDFGHJ":"HGBCAFDJ","ABCDFGHI":"HGBCAFDI","ABCDEJKL":"EJBCADLK","ABCDEIKL":"EIBCADLK","ABCDEIJL":"EJBCADLI","ABCDEIJK":"EJBCADIK","ABCDEHKL":"HEBCADLK","ABCDEHJL":"HJBCADLE","ABCDEHJK":"HJBCADEK","ABCDEHIL":"HEBCADLI","ABCDEHIK":"HEBCADIK","ABCDEHIJ":"HJBCADEI","ABCDEGKL":"EGBCADLK","ABCDEGJL":"EGBCADLJ","ABCDEGJK":"EGBCADJK","ABCDEGIL":"EGBCADLI","ABCDEGIK":"EGBCADIK","ABCDEGIJ":"EGBCADIJ","ABCDEGHL":"HGBCADLE","ABCDEGHK":"HGBCADEK","ABCDEGHJ":"HGBCADEJ","ABCDEGHI":"HGBCADEI","ABCDEFKL":"CEBDAFLK","ABCDEFJL":"CJBDAFLE","ABCDEFJK":"CJBDAFEK","ABCDEFIL":"CEBDAFLI","ABCDEFIK":"CEBDAFIK","ABCDEFIJ":"CJBDAFEI","ABCDEFHL":"HFBCADLE","ABCDEFHK":"HEBCAFDK","ABCDEFHJ":"HJBCAFDE","ABCDEFHI":"HEBCAFDI","ABCDEFGL":"CGBDAFLE","ABCDEFGK":"CGBDAFEK","ABCDEFGJ":"CGBDAFEJ","ABCDEFGI":"CGBDAFEI","ABCDEFGH":"HGBCAFDE"};
-/* ---------- Knockout bracket (projected) ---------- */
+  var KSCHED={"73":{"lbl":"Sun 28 Jun","t":"20:00"},"76":{"lbl":"Mon 29 Jun","t":"18:00"},"74":{"lbl":"Mon 29 Jun","t":"21:30"},"75":{"lbl":"Tue 30 Jun","t":"02:00"},"78":{"lbl":"Tue 30 Jun","t":"18:00"},"77":{"lbl":"Tue 30 Jun","t":"22:00"},"79":{"lbl":"Wed 1 Jul","t":"02:00"},"80":{"lbl":"Wed 1 Jul","t":"17:00"},"82":{"lbl":"Wed 1 Jul","t":"21:00"},"81":{"lbl":"Thu 2 Jul","t":"01:00"},"84":{"lbl":"Thu 2 Jul","t":"20:00"},"83":{"lbl":"Fri 3 Jul","t":"00:00"},"85":{"lbl":"Fri 3 Jul","t":"04:00"},"88":{"lbl":"Fri 3 Jul","t":"19:00"},"86":{"lbl":"Fri 3 Jul","t":"23:00"},"87":{"lbl":"Sat 4 Jul","t":"02:30"},"90":{"lbl":"Sat 4 Jul","t":"18:00"},"89":{"lbl":"Sat 4 Jul","t":"22:00"},"91":{"lbl":"Sun 5 Jul","t":"21:00"},"92":{"lbl":"Mon 6 Jul","t":"01:00"},"93":{"lbl":"Mon 6 Jul","t":"20:00"},"94":{"lbl":"Tue 7 Jul","t":"01:00"},"95":{"lbl":"Tue 7 Jul","t":"17:00"},"96":{"lbl":"Tue 7 Jul","t":"21:00"},"97":{"lbl":"Thu 9 Jul","t":"21:00"},"98":{"lbl":"Fri 10 Jul","t":"20:00"},"99":{"lbl":"Sat 11 Jul","t":"22:00"},"100":{"lbl":"Sun 12 Jul","t":"02:00"},"101":{"lbl":"Tue 14 Jul","t":"20:00"},"102":{"lbl":"Wed 15 Jul","t":"20:00"},"103":{"lbl":"Sat 18 Jul","t":"22:00"},"104":{"lbl":"Sun 19 Jul","t":"20:00"}};
+  var GDONE={"A":"2026-06-25","B":"2026-06-24","D":"2026-06-26","C":"2026-06-24","E":"2026-06-25","F":"2026-06-26","H":"2026-06-27","G":"2026-06-27","I":"2026-06-26","J":"2026-06-28","K":"2026-06-28","L":"2026-06-27"};
+/* ---------- Knockout bracket (projected, reference format) ---------- */
 var R32=[
  {n:73,a:['R','A'],b:['R','B']},{n:74,a:['W','E'],b:['T','E']},{n:75,a:['W','F'],b:['R','C']},{n:76,a:['W','C'],b:['R','F']},
  {n:77,a:['W','I'],b:['T','I']},{n:78,a:['R','E'],b:['R','I']},{n:79,a:['W','A'],b:['T','A']},{n:80,a:['W','L'],b:['T','L']},
@@ -2389,6 +2396,10 @@ var FLOW16=[{n:89,a:74,b:77},{n:90,a:73,b:75},{n:91,a:76,b:78},{n:92,a:79,b:80},
 var FLOWQF=[{n:97,a:89,b:90},{n:98,a:93,b:94},{n:99,a:91,b:92},{n:100,a:95,b:96}];
 var FLOWSF=[{n:101,a:97,b:98},{n:102,a:99,b:100}];
 var FLOWF=[{n:104,a:101,b:102}];
+var R32MAP={}; R32.forEach(function(m){R32MAP[m.n]=m;});
+var FEEDS={}; [].concat(FLOW16,FLOWQF,FLOWSF,FLOWF).forEach(function(e){FEEDS[e.n]={a:e.a,b:e.b};});
+var ALLOWED={E:'A/B/C/D/F',I:'C/D/F/G/H',A:'C/E/F/H/I',L:'E/H/I/J/K',D:'B/E/F/I/J',G:'A/E/H/I/J',B:'E/F/G/I/J',K:'D/E/I/J/L'};
+var RNDS=[{k:'R32',l:'Round of 32',flow:FLOW16},{k:'R16',l:'Round of 16',flow:FLOWQF},{k:'QF',l:'Quarter-final',flow:FLOWSF},{k:'SF',l:'Semi-final',flow:FLOWF},{k:'F',l:'Final',flow:null}];
 
 function ownerPhoto(code){var p=(D.players||[]).find(function(p){return (p.teams||[]).indexOf(code)>=0;});return p?photoSrc(p):'';}
 
@@ -2412,31 +2423,60 @@ function bracketModel(){
   var assign=(typeof T3!=='undefined')?T3[key]:null;
   var col=['A','B','D','E','G','I','K','L'], T3by={};
   if(assign){for(var i=0;i<8;i++){T3by[col[i]]={code:thirdCode[assign[i]],src:assign[i]};}}
-  return {winner:winner,runner:runner,third:third,best8:best8,T3by:T3by,tie:tie};
+  var dt=new Date(), to=dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2);
+  var gdone={}; Object.keys(GDONE).forEach(function(g){ gdone[g]= to>GDONE[g]; });
+  var alldone=Object.keys(GDONE).every(function(g){return gdone[g];});
+  return {winner:winner,runner:runner,third:third,T3by:T3by,tie:tie,gdone:gdone,alldone:alldone};
 }
 
 function viewBracket(){
   var M=bracketModel();
-  function res(sp){var ty=sp[0],g=sp[1];
-    if(ty==='W')return {code:M.winner[g],badge:'1'+g};
-    if(ty==='R')return {code:M.runner[g],badge:'2'+g};
-    var inf=M.T3by[g];return {code:inf?inf.code:null,badge:inf?('3'+inf.src):'3rd'};}
-  function teamRow(code,badge){
-    if(!code)return '<div style="display:flex;align-items:center;gap:6px;padding:7px 11px;min-height:26px"><span style="font:800 12px Archivo;color:var(--muted)">TBD</span><span style="font:700 9px Archivo;color:var(--muted);margin-left:auto">'+badge+'</span></div>';
-    var ph=ownerPhoto(code),on=ownerOf(code);
-    return '<div style="display:flex;align-items:center;gap:7px;padding:7px 11px;min-height:26px">'+flagImg(code,22,15,2)
-      +'<span style="font:800 13px Archivo;color:var(--ink)">'+esc(code)+'</span>'
-      +'<span style="font:700 9px Archivo;color:var(--accent)">'+badge+'</span>'
-      +'<span style="margin-left:auto;display:flex;align-items:center;gap:5px">'+(ph?'<img src="'+ph+'" alt="" style="width:19px;height:19px;border-radius:50%;object-fit:cover;border:1px solid var(--card-border)">':'')+'<span style="font:700 10px Archivo;color:var(--muted)">'+esc(on)+'</span></span></div>';
+  var round=state.brRound||'R32', mode=state.brMode||'asis';
+  function flagC(code){return flagImg(code,19,19,999);}
+  function trow(code,badge){var ph=ownerPhoto(code),nm=(D.teams[code]||{}).name||code;
+    return '<div style="display:flex;align-items:center;gap:6px;padding:4px 9px;min-width:0">'+flagC(code)
+      +'<span style="font:800 12px Archivo;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(nm)+'</span>'
+      +'<span style="font:800 8px Archivo;color:var(--accent);flex:none">'+badge+'</span>'
+      +(ph?'<img src="'+ph+'" alt="" style="width:15px;height:15px;border-radius:50%;object-fit:cover;margin-left:auto;flex:none;border:1px solid var(--card-border)">':'')+'</div>';}
+  function prow(txt){return '<div style="display:flex;align-items:center;padding:4px 9px;min-height:25px"><span style="font:700 10px Archivo;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(txt)+'</span></div>';}
+  function slotRow(spec){var ty=spec[0],g=spec[1],code,badge,codeLabel,conf;
+    if(ty==='W'){code=M.winner[g];badge='1'+g;codeLabel='1'+g;conf=M.gdone[g];}
+    else if(ty==='R'){code=M.runner[g];badge='2'+g;codeLabel='2'+g;conf=M.gdone[g];}
+    else {var inf=M.T3by[g];code=inf?inf.code:null;badge=inf?('3'+inf.src):'3rd';codeLabel='3rd '+(ALLOWED[g]||'');conf=M.alldone;}
+    if(mode==='confirmed'&&!conf) return prow(codeLabel);
+    if(!code) return prow(codeLabel);
+    return trow(code,badge);
   }
-  function card(top,bot){return '<div style="background:var(--card);border:1px solid var(--card-border);border-radius:11px;overflow:hidden;box-shadow:1px 2px 0 var(--shadow)">'+top+'<div style="height:1px;background:var(--card-border)"></div>'+bot+'</div>';}
-  var rows=R32.map(function(m){var a=res(m.a),b=res(m.b);
-    return '<div style="margin-bottom:11px"><div style="font:800 8px Archivo;letter-spacing:.1em;color:var(--muted);margin:0 0 3px 3px">MATCH '+m.n+'</div>'+card(teamRow(a.code,a.badge),teamRow(b.code,b.badge))+'</div>';});
-  var note='Round of 32, projected from current group standings — provisional until the groups finish.'+(M.tie?' Some positions are level on points (goal difference used; ties are a best guess).':'');
-  return '<div style="padding:4px 9px 18px">'
-    +'<div style="font:600 11px/1.45 Archivo;color:var(--muted);margin:2px 4px 13px">'+esc(note)+'</div>'
-    +rows.join('')
-    +'<div style="font:600 10.5px/1.45 Archivo;color:var(--muted);text-align:center;margin:13px 8px 0">The Round of 16 onward fills in once the knockout games are played.</div>'
+  function matchRows(rk,n){ if(rk==='R32'){var m=R32MAP[n];return [slotRow(m.a),slotRow(m.b)];} var f=FEEDS[n]||{};return [prow('Winner M'+f.a),prow('Winner M'+f.b)];}
+  function matchConf(rk,n){ if(rk!=='R32') return false; var m=R32MAP[n];
+    function c(sp){var ty=sp[0],g=sp[1];return ty==='T'?M.alldone:M.gdone[g];} return c(m.a)&&c(m.b);}
+  function card(rk,n,w){var s=KSCHED[String(n)]||{},rows=matchRows(rk,n),cf=matchConf(rk,n);
+    var tag=rk==='R32'?('<div style="font:800 7px Archivo;letter-spacing:.07em;text-transform:uppercase;color:'+(cf?'var(--green)':'var(--muted)')+';margin:0 0 2px 4px">'+(cf?'Confirmed':'As it stands')+'</div>'):'<div style="font:800 7px Archivo;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 2px 4px">Match '+n+'</div>';
+    var dt=s.lbl?'<div style="width:72px;flex:none;border-left:1px solid var(--card-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 4px"><span style="font:700 8.5px Archivo;color:var(--muted);text-align:center;line-height:1.1">'+s.lbl+'</span><span style="font:800 12px Archivo;color:var(--ink)">'+s.t+'</span></div>':'';
+    return '<div style="width:'+w+'px;height:72px;flex:none">'+tag+'<div style="background:var(--card);border:1px solid '+(cf?'var(--accent)':'var(--card-border)')+';border-radius:11px;box-shadow:1px 2px 0 var(--shadow);display:flex;align-items:stretch;overflow:hidden;height:58px"><div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0">'+rows[0]+'<div style="height:1px;background:var(--card-border);margin:0 8px"></div>'+rows[1]+'</div>'+dt+'</div></div>';
+  }
+  var body;
+  if(round==='F'){
+    body='<div style="display:flex;justify-content:center;padding-top:8px">'+card('F',104,250)+'</div>';
+  } else {
+    var rdef=RNDS.find(function(r){return r.k===round;});
+    var blocks=rdef.flow.map(function(e){
+      return '<div class="brblk"><div class="brfeed">'+card(round,e.a,228)+card(round,e.b,228)+'</div><div class="brconn"></div>'+card(RNDS[RNDS.indexOf(rdef)+1].k,e.n,176)+'</div>';
+    }).join('');
+    body='<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 4px 8px"><div style="display:inline-block;min-width:max-content">'+blocks+'</div></div>';
+  }
+  var chips=RNDS.map(function(r){var on=r.k===round;
+    return '<button data-act="brround" data-r="'+r.k+'" style="flex:none;background:'+(on?'#fff':'var(--card-soft)')+';color:'+(on?'#0b1f3a':'var(--ink)')+';border:1px solid '+(on?'#fff':'var(--card-soft-border)')+';border-radius:999px;font:800 11px Archivo;padding:7px 14px;cursor:pointer">'+r.l+'</button>';
+  }).join('');
+  var toggle=['asis','confirmed'].map(function(m){var on=mode===m;
+    return '<button data-act="brmode" data-m="'+m+'" style="background:'+(on?'#fff':'transparent')+';color:'+(on?'#0b1f3a':'var(--muted)')+';border:none;border-radius:999px;font:800 11px Archivo;padding:7px 16px;cursor:pointer">'+(m==='asis'?'As it stands':'Confirmed')+'</button>';
+  }).join('');
+  var note='Projected from current group standings'+(M.tie?' · some positions level on points (ties are a best guess)':'')+'. Times are Irish.';
+  return '<div style="padding:6px 7px 18px">'
+    +'<div style="display:inline-flex;background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:999px;padding:3px;margin:0 2px 11px">'+toggle+'</div>'
+    +'<div style="display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 2px 11px">'+chips+'</div>'
+    +body
+    +'<div style="font:600 10px/1.45 Archivo;color:var(--muted);margin:10px 4px 0">'+esc(note)+'</div>'
     +'</div>';
 }
 
@@ -2497,6 +2537,8 @@ function viewBracket(){
     var el=ev.target.closest('[data-act]'); if(!el) return;
     var act=el.getAttribute('data-act');
     if(act==='tab'){ state.tab=el.getAttribute('data-tab'); state.expanded=null; render(); }
+    else if(act==='brround'){ state.brRound=el.getAttribute('data-r'); render(); }
+    else if(act==='brmode'){ state.brMode=el.getAttribute('data-m'); render(); }
     else if(act==='lbmode'){ state.lbMode=el.getAttribute('data-mode'); state.expanded=null; render(); }
     else if(act==='theme'){ state.theme=state.theme==='light'?'dark':'light'; try{localStorage.setItem('cc_theme',state.theme);}catch(e){} render(); }
     else if(act==='rules'){ state.showRules=!state.showRules; render(); }
