@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260628-104306';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260628-151440';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3792,7 +3792,9 @@ window.WC_DATA = {
       else badge='<div style="width:38px;height:38px;border-radius:50%;background:var(--chip);border:1.5px solid var(--card-border);display:flex;align-items:center;justify-content:center;font:900 16px Archivo;color:var(--ink);flex:none">'+rankNum+'</div>';
       var flags=(p.teams||[]).map(function(c){
         var star=(c===D.favourite)?'<span style="position:absolute;right:-5px;top:-6px;font-size:9px">⭐</span>':'';
-        return '<span style="position:relative;display:inline-flex;'+(elim[c]?'opacity:.4;':'')+'"><img src="'+flagUrl(c,40)+'" style="width:21px;height:14px;border-radius:2px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.14)">'+star+'</span>';
+        var img='<img src="'+flagUrl(c,40)+'" style="width:21px;height:14px;border-radius:2px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.14)'+(elim[c]?';opacity:.5':'')+'">';
+        var strike=elim[c]?'<span style="position:absolute;left:-1px;right:-1px;top:6px;height:2px;background:var(--red);box-shadow:0 0 0 .5px rgba(255,255,255,.55);transform:rotate(-18deg)"></span>':'';
+        return '<span style="position:relative;display:inline-flex">'+img+strike+star+'</span>';
       }).join('');
       var paid=p.paid?'<span style="margin-left:2px;background:var(--card-soft);border:1px solid var(--card-soft-border);color:var(--green);border-radius:5px;padding:0 5px;font:900 11px Archivo">€</span>':'';
       var photo='<img src="'+photoSrc(p)+'" data-act="photo" data-id="'+p.id+'" class="tap" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--card);box-shadow:0 0 0 1.5px var(--card-border);flex:none;cursor:zoom-in">';
