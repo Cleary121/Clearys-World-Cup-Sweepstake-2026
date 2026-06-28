@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260628-103837';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260628-104306';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3771,7 +3771,7 @@ window.WC_DATA = {
       var qT3={}; Object.keys(M.T3by).forEach(function(g){var c=M.T3by[g]&&M.T3by[g].code; if(c)qT3[c]=1;});
       Object.keys(T).forEach(function(c){ var g=(T[c]||{}).group; if(!g||(gcount[g]||0)<4||qWR[c]) return; if(c===M.third[g]){ if(allDone&&!qT3[c]) out[c]=1; } else out[c]=1; });
     }
-    (D.matches||[]).forEach(function(m){ var gh=(T[m.home]||{}).group, ga=(T[m.away]||{}).group; if(gh&&gh===ga) return; if(m.status!=='FINISHED'||m.hs==null||m.as==null||m.hs===m.as) return; out[ m.hs>m.as ? m.away : m.home ]=1; });
+    (D.matches||[]).forEach(function(m){ var gh=(T[m.home]||{}).group, ga=(T[m.away]||{}).group; if(gh&&gh===ga) return; if(m.status!=='FINISHED'||m.hs==null||m.as==null) return; var L=null; if(m.hs>m.as) L=m.away; else if(m.as>m.hs) L=m.home; else if(m.pw==='h') L=m.away; else if(m.pw==='a') L=m.home; if(L) out[L]=1; });
     return out;
   }
   function viewTable(){

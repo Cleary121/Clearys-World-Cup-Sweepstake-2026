@@ -104,8 +104,14 @@ def main():
                 elif typ=="Goal" and det!="Missed Penalty":
                     if not pl: continue
                     goals.append({"s":side,"p":pl,"m":mn,"og":det=="Own Goal","pen":det=="Penalty"})
-        new_matches.append({"date":f["fixture"]["date"][:10],"home":home,"away":away,
-            "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"gv":2,"status":"FINISHED"})
+        pw=None
+        if st in ("PEN","AET") and hs==as_:
+            if f["teams"]["home"].get("winner"): pw="h"
+            elif f["teams"]["away"].get("winner"): pw="a"
+        md={"date":f["fixture"]["date"][:10],"home":home,"away":away,
+            "hs":hs,"as":as_,"hy":hy,"ay":ay,"hr":hr,"ar":ar,"goals":goals,"cards":cards,"gv":2,"status":"FINISHED"}
+        if pw: md["pw"]=pw
+        new_matches.append(md)
     new_matches.sort(key=lambda m:(m["date"],m["home"]))
 
     prev_up={(u["home"],u["away"]):u for u in D.get("upcoming",[])}
