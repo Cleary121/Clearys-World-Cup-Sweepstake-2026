@@ -103,6 +103,7 @@ def main():
                     cards.append({"s":side,"p":pl,"m":mn,"c":"r" if red else "y"})
                 elif typ=="Goal" and det!="Missed Penalty":
                     if not pl: continue
+                    if x.get("comments")=="Penalty Shootout": continue  # shootout pens never count as goals
                     goals.append({"s":side,"p":pl,"m":mn,"og":det=="Own Goal","pen":det=="Penalty"})
         pw=None
         if st in ("PEN","AET") and hs==as_:
