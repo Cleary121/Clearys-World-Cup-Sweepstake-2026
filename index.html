@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260630-171518';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260630-173815';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3880,24 +3880,11 @@ window.WC_DATA = {
     function pick(pid,tags){var pool=[];tags.forEach(function(t){var L=(BANTER[pid]||{})[t];if(L)for(var i=0;i<L.length;i++)pool.push(L[i]);});if(!pool.length){var L2=(BANTER[pid]||{}).slag;if(L2)pool=L2;}return pool.length?pool[Math.floor(Date.now()/43200000)%pool.length]:'';}
     function inner(pl,label,ptsTxt,line,hint){var ph=photoSrc(pl);return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font:800 9px Archivo;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)">Today&#39;s burn 🔥</span>'+(hint?'<span style="font:700 8.5px Archivo;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">tap to flip ↻</span>':'')+'</div><div style="display:flex;gap:10px;align-items:flex-start">'+(ph?'<img src="'+ph+'" alt="" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;border:1.5px solid var(--card-border)">':'')+'<div style="min-width:0"><div style="font:800 9px Archivo;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:2px">'+label+' &middot; '+esc(pl.name)+ptsTxt+'</div><div style="font:600 12px/1.45 Archivo;color:var(--ink)">'+esc(line)+'</div></div></div>';}
     var CARD='background:var(--card-soft);border:1px solid var(--card-soft-border);border-radius:12px;padding:10px 13px;';
+    if(!yWorst) return '';
     var ptsTxt=' &middot; '+yPts+(Math.abs(yPts)===1?' pt':' pts');
-    var topp=ranked[0].p, faces=[];
-    if(yWorst){
-      if(yWorst.id===bottom.id){ faces.push(inner(yWorst,'Worst yesterday &amp; bottom',ptsTxt,pick(yWorst.id,['spoon','slag']),false)); }
-      else {
-        faces.push(inner(yWorst,'Worst yesterday',ptsTxt,pick(yWorst.id,['slag','club']),false));
-        faces.push(inner(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),false));
-      }
-    } else { faces.push(inner(bottom,'Bottom of the table','',pick(bottom.id,['spoon','slag']),false)); }
-    if(topp.id!==bottom.id){ var tl=pick(topp.id,['top']); if(tl) faces.push(inner(topp,'Top of the table','',tl,false)); }
-    faces=faces.filter(function(x){return x;});
-    if(!faces.length) return '';
-    window.WCBURN={faces:faces,idx:0,back:false};
-    if(faces.length===1){ return '<div style="'+CARD+'margin:0 5px 13px">'+faces[0]+'</div>'; }
-    return '<div class="burnflip" style="perspective:900px;margin:0 5px 13px"><div class="burninner" style="display:grid;transition:transform .55s ease;transform-style:preserve-3d">'
-      +'<div style="grid-area:1/1;-webkit-backface-visibility:hidden;backface-visibility:hidden;'+CARD+'">'+faces[0]+'</div>'
-      +'<div style="grid-area:1/1;transform:rotateY(180deg);-webkit-backface-visibility:hidden;backface-visibility:hidden;'+CARD+'"></div>'
-      +'</div></div>';
+    var line=pick(yWorst.id,['slag','club']);
+    if(!line) return '';
+    return '<div style="'+CARD+'margin:0 5px 13px">'+inner(yWorst,'Worst yesterday',ptsTxt,line,false)+'</div>';
   }
 
   function liveCardHtml(){
