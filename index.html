@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260701-051520';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260701-072109';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4016,7 +4016,7 @@ window.WC_DATA = {
     ms.forEach(function(m){ if(m.date<today && pdates.indexOf(m.date)<0) pdates.push(m.date); });
     pdates.sort(); var prevDay=pdates.length?pdates[pdates.length-1]:null, yWorst=null, yPts=0;
     if(prevDay){
-      var arr=D.players.map(function(pl){var dp=dayPts(pl,prevDay);return {p:pl,pts:dp.pts,played:dp.played};}).filter(function(x){return x.played;}).sort(function(a,b){return a.pts-b.pts;});
+      var arr=D.players.map(function(pl){var dp=dayPts(pl,prevDay);return {p:pl,pts:dp.pts,played:dp.played,tot:playerTotal(pl)};}).filter(function(x){return x.played;}).sort(function(a,b){return (a.pts-b.pts)||(a.tot-b.tot);});
       if(arr.length){ yWorst=arr[0].p; yPts=arr[0].pts; }
     }
     function pick(pid,tags){var pool=[];tags.forEach(function(t){var L=(BANTER[pid]||{})[t];if(L)for(var i=0;i<L.length;i++)pool.push(L[i]);});if(!pool.length){var L2=(BANTER[pid]||{}).slag;if(L2)pool=L2;}return pool.length?pool[Math.floor(Date.now()/43200000)%pool.length]:'';}
