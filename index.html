@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260708-073517';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260708-074500';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4806,7 +4806,7 @@ window.WC_DATA = {
   };;;
 
   var _savedTheme='light'; try{ _savedTheme=localStorage.getItem('cc_theme')||'light'; }catch(e){}
-  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{}, todayExpanded:false, brRound:'R32', brMode:'asis' };
+  var state = { tab:'table', theme:_savedTheme, expanded:null, sortKey:'total', sortDir:-1, showRules:false, lightbox:null, lbMode:'main', resultsDate:'', resExpanded:{}, todayExpanded:false, brRound:null, brMode:'asis' };
   var LIVE=[]; var lastLiveTs=0;
   var WORKER_URL='https://wc-live.davidgcleary.workers.dev/';
   var screenEl = document.getElementById('screen');
@@ -5233,7 +5233,7 @@ function bracketModel(){
 
 function viewBracket(){
   var M=bracketModel();
-  var round=state.brRound||'R32', mode='asis';
+  var mode='asis';
   function flagC(code){return flagImg(code,19,19,999);}
   function prow(txt){return '<div style="display:flex;align-items:center;padding:4px 9px;min-height:25px"><span style="font:700 10px Archivo;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(txt)+'</span></div>';}
   var KO={};
@@ -5256,6 +5256,12 @@ function viewBracket(){
     if(out.a&&out.b){ var r=KO[[out.a,out.b].sort().join('|')]; if(r){ out.res=r; out.winner=r.winner; } }
     _memo[n]=out; return out;
   }
+  function currentRound(){
+    var R=[['R32',73,88],['R16',89,96],['QF',97,100],['SF',101,102],['F',104,104]];
+    for(var i=0;i<R.length;i++){ for(var n=R[i][1];n<=R[i][2];n++){ if(n===103)continue; if(!resolveMatch(n).res) return R[i][0]; } }
+    return 'F';
+  }
+  var round=state.brRound||currentRound();
   function teamRow(code,badge,win,loss){var ph=ownerPhoto(code),nm=(D.teams[code]||{}).name||code;
     return '<div style="display:flex;align-items:center;gap:6px;padding:4px 9px;min-width:0;'+(loss?'opacity:.5;':'')+'">'+flagImg(code,19,19,999)
       +'<span style="font:'+(win?'800':'700')+' 12px Archivo;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(nm)+'</span>'
