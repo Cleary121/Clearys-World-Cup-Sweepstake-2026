@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <script>
-(function(){var V='20260708-072419';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
+(function(){var V='20260708-073517';try{fetch('ver.txt?cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){t=(t||'').trim();if(t&&t!==V&&sessionStorage.getItem('ccv')!==t){sessionStorage.setItem('ccv',t);location.reload();}}).catch(function(){});}catch(e){}})();
 </script>
 <title>Cleary's Cup — World Cup 2026 Sweepstake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -5235,28 +5235,44 @@ function viewBracket(){
   var M=bracketModel();
   var round=state.brRound||'R32', mode='asis';
   function flagC(code){return flagImg(code,19,19,999);}
-  function trow(code,badge){var ph=ownerPhoto(code),nm=(D.teams[code]||{}).name||code;
-    return '<div style="display:flex;align-items:center;gap:6px;padding:4px 9px;min-width:0">'+flagC(code)
-      +'<span style="font:800 12px Archivo;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(nm)+'</span>'
-      +'<span style="font:800 8px Archivo;color:var(--accent);flex:none">'+badge+'</span>'
-      +(ph?'<img src="'+ph+'" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover;margin-left:auto;flex:none;border:1px solid var(--card-border)">':'')+'</div>';}
   function prow(txt){return '<div style="display:flex;align-items:center;padding:4px 9px;min-height:25px"><span style="font:700 10px Archivo;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(txt)+'</span></div>';}
-  function slotRow(spec){var ty=spec[0],g=spec[1],code,badge,codeLabel,conf;
-    if(ty==='W'){code=M.winner[g];badge='1'+g;codeLabel='1'+g;conf=M.gdone[g];}
-    else if(ty==='R'){code=M.runner[g];badge='2'+g;codeLabel='2'+g;conf=M.gdone[g];}
-    else {var inf=M.T3by[g];code=inf?inf.code:null;badge=inf?('3'+inf.src):'3rd';codeLabel='3rd '+(ALLOWED[g]||'');conf=M.alldone;}
-    if(mode==='confirmed'&&!conf) return prow(codeLabel);
-    if(!code) return prow(codeLabel);
-    return trow(code,badge);
+  var KO={};
+  (D.matches||[]).forEach(function(m){
+    var gh=(D.teams[m.home]||{}).group, ga=(D.teams[m.away]||{}).group;
+    if(gh&&gh===ga) return;
+    if(m.status!=='FINISHED'||m.hs==null||m.as==null) return;
+    var w=null; if(m.hs>m.as)w=m.home; else if(m.as>m.hs)w=m.away; else if(m.pw==='h')w=m.home; else if(m.pw==='a')w=m.away;
+    KO[[m.home,m.away].sort().join('|')]={hs:m.hs,as:m.as,pw:m.pw,winner:w};
+  });
+  function slotTeam(sp){var ty=sp[0],g=sp[1]; if(ty==='W')return M.winner[g]; if(ty==='R')return M.runner[g]; var inf=M.T3by[g]; return inf?inf.code:null;}
+  function slotBadge(sp){var ty=sp[0],g=sp[1]; if(ty==='W')return '1'+g; if(ty==='R')return '2'+g; var inf=M.T3by[g]; return inf?('3'+inf.src):''; }
+  var _memo={};
+  function resolveMatch(n){
+    if(_memo[n]) return _memo[n];
+    var out;
+    if(n<=88){ var m=R32MAP[n]; out={a:slotTeam(m.a),b:slotTeam(m.b),ba:slotBadge(m.a),bb:slotBadge(m.b)}; }
+    else { var f=FEEDS[n]; var ra=resolveMatch(f.a), rb=resolveMatch(f.b); out={a:ra.winner||null,b:rb.winner||null,fa:f.a,fb:f.b}; }
+    out.res=null; out.winner=null;
+    if(out.a&&out.b){ var r=KO[[out.a,out.b].sort().join('|')]; if(r){ out.res=r; out.winner=r.winner; } }
+    _memo[n]=out; return out;
   }
-  function matchRows(rk,n){ if(rk==='R32'){var m=R32MAP[n];return [slotRow(m.a),slotRow(m.b)];} var f=FEEDS[n]||{};return [prow('Winner M'+f.a),prow('Winner M'+f.b)];}
-  function matchConf(rk,n){ if(rk!=='R32') return false; var m=R32MAP[n];
-    function c(sp){var ty=sp[0],g=sp[1];return ty==='T'?M.alldone:M.gdone[g];} return c(m.a)&&c(m.b);}
-  function card(rk,n,w){var s=KSCHED[String(n)]||{},rows=matchRows(rk,n),cf=matchConf(rk,n);
+  function teamRow(code,badge,win,loss){var ph=ownerPhoto(code),nm=(D.teams[code]||{}).name||code;
+    return '<div style="display:flex;align-items:center;gap:6px;padding:4px 9px;min-width:0;'+(loss?'opacity:.5;':'')+'">'+flagImg(code,19,19,999)
+      +'<span style="font:'+(win?'800':'700')+' 12px Archivo;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(nm)+'</span>'
+      +(badge?'<span style="font:800 8px Archivo;color:var(--accent);flex:none">'+badge+'</span>':'')
+      +(ph?'<img src="'+ph+'" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover;margin-left:auto;flex:none;border:1px solid var(--card-border)">':'')+'</div>';}
+  function sideRow(n,which){var r=resolveMatch(n),code=r[which],badge=which==='a'?r.ba:r.bb;
+    if(code){var win=r.winner&&r.winner===code,loss=r.winner&&r.winner!==code;return teamRow(code,badge,win,loss);}
+    if(n<=88){var m=R32MAP[n],sp=m[which];return prow(sp[0]==='T'?('3rd '+(ALLOWED[sp[1]]||'')):((sp[0]==='W'?'1':'2')+sp[1]));}
+    return prow('Winner M'+(which==='a'?r.fa:r.fb));}
+  function card(rk,n,w){var r=resolveMatch(n),s=KSCHED[String(n)]||{};
     var tag='<div style="font:800 7px Archivo;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 2px 4px">Match '+n+'</div>';
-    var dt=s.lbl?'<div style="width:72px;flex:none;border-left:1px solid var(--card-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 4px"><span style="font:700 8.5px Archivo;color:var(--muted);text-align:center;line-height:1.1">'+s.lbl+'</span><span style="font:800 12px Archivo;color:var(--ink)">'+s.t+'</span></div>':'';
-    return '<div style="width:'+w+'px;height:80px;flex:none">'+tag+'<div style="background:var(--card);border:1px solid var(--card-border);border-radius:11px;box-shadow:1px 2px 0 var(--shadow);display:flex;align-items:stretch;overflow:hidden;height:66px"><div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0">'+rows[0]+'<div style="height:1px;background:var(--card-border);margin:0 8px"></div>'+rows[1]+'</div>'+dt+'</div></div>';
+    var right='';
+    if(r.res){right='<div style="width:72px;flex:none;border-left:1px solid var(--card-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 4px"><span style="font:900 16px Archivo;color:var(--ink)">'+r.res.hs+'-'+r.res.as+'</span><span style="font:700 7.5px Archivo;letter-spacing:.06em;color:var(--muted)">'+(r.res.pw?'pens':'FT')+'</span></div>';}
+    else if(s.lbl){right='<div style="width:72px;flex:none;border-left:1px solid var(--card-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 4px"><span style="font:700 8.5px Archivo;color:var(--muted);text-align:center;line-height:1.1">'+s.lbl+'</span><span style="font:800 12px Archivo;color:var(--ink)">'+s.t+'</span></div>';}
+    return '<div style="width:'+w+'px;height:80px;flex:none">'+tag+'<div style="background:var(--card);border:1px solid var(--card-border);border-radius:11px;box-shadow:1px 2px 0 var(--shadow);display:flex;align-items:stretch;overflow:hidden;height:66px"><div style="flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0">'+sideRow(n,'a')+'<div style="height:1px;background:var(--card-border);margin:0 8px"></div>'+sideRow(n,'b')+'</div>'+right+'</div></div>';
   }
+
   var SIDE={89:'T',90:'T',93:'T',94:'T',91:'B',92:'B',95:'B',96:'B',97:'T',98:'T',99:'B',100:'B',101:'T',102:'B'};
   function hdr(t){return '<div style="font:800 9.5px Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:8px 2px 11px">'+t+'</div>';}
   var body;
@@ -5274,7 +5290,7 @@ function viewBracket(){
   var chips=RNDS.map(function(r){var on=r.k===round;
     return '<button data-act="brround" data-r="'+r.k+'" style="flex:none;background:'+(on?'#fff':'var(--card-soft)')+';color:'+(on?'#0b1f3a':'var(--ink)')+';border:1px solid '+(on?'#fff':'var(--card-soft-border)')+';border-radius:999px;font:800 11px Archivo;padding:7px 14px;cursor:pointer">'+r.l+'</button>';
   }).join('');
-  var note='Round of 32 from the final group standings. Later rounds fill in as the knockouts are played. Times shown in Irish time.';
+  var note='Live bracket — updates automatically as games are played; winners advance. Times shown in Irish time.';
   return '<div style="padding:6px 7px 18px">'
     +'<div style="display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 2px 11px">'+chips+'</div>'
     +body
